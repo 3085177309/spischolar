@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.LinkRuleDaoI">
+
+	<!-- 获取机构所有启用的链接规则 -->
+	<select id="findUsedRuleByOrg" resultType="LinkRule"
+		parameterType="integer">
+		select id,name,journal_link_rule as linkRule,org_id as
+		orgId,db_id as dbId,is_use as isUse from t_db_rule where org_id=#{id}
+		and is_use=1
+	</select>
+
+	<select id="findById" resultType="LinkRule" parameterType="integer">
+		select id,name,journal_link_rule as linkRule,org_id as orgId,db_id as
+		dbId,is_use as isUse from t_db_rule where id=#{id}
+	</select>
+
+	<!-- 获取机构规则总数量 -->
+	<select id="getOrgRuleCount" resultType="integer" parameterType="java.util.Map">
+		select count(id) from t_db_rule where org_id=#{orgId} and
+		db_id=#{dbId}
+	</select>
+
+	<!-- 分页方式获取机构总数量 -->
+	<select id="findOrgRuleByPager" resultType="LinkRule"
+		parameterType="java.util.Map">
+		select
+		id,name,journal_link_rule as linkRule,org_id as
+		orgId,db_id as dbId,is_use as isUse
+		from
+		t_db_rule
+		where
+		org_id=#{orgId}
+		and db_id=#{dbId}
+		limit
+		#{offset},#{size}
+	</select>
+
+	<insert id="insert" parameterType="LinkRule">
+		insert into
+		t_db_rule(name,journal_link_rule,org_id,db_id)
+		values(
+		#{name},#{linkRule},#{orgId},#{dbId}
+		)
+	</insert>
+
+	<update id="update" parameterType="LinkRule">
+		update t_db_rule
+		set
+		name=#{name},journal_link_rule=#{linkRule}
+		where id=#{id}
+	</update>
+
+	<delete id="del" parameterType="integer">
+		delete from t_db_rule where
+		id=#{id}
+	</delete>
+
+	<delete id="deleteByOrg" parameterType="integer">
+		delete from t_db_rule
+		where org_id=#{id}
+	</delete>
+</mapper>    

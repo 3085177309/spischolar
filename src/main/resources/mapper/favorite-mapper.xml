@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.FavoriteDaoI">
+
+	<update id="update" parameterType="java.util.Map">
+		update t_favorite set
+		member_id = #{memberId} where member_id = #{oldId}
+	</update>
+
+	<insert id="insert" parameterType="Favorite" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into t_favorite(member_id,time,content,doc_Id,type)
+		values(#{memberId},#{time},#{content},#{docId},#{type})
+	</insert>
+
+	<delete id="delete" parameterType="integer">
+		delete from t_favorite where
+		doc_id = #{docId} and member_id = #{memberId}
+	</delete>
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM (
+		select doc_id,content from t_favorite
+		<if test="memberId != null">
+			where member_id = #{memberId}
+		</if>
+		<if test="memberId != null">
+			and type = #{type}
+		</if>
+		GROUP BY doc_id,content ) as t
+	</select>
+
+	<select id="getByDocId" resultType="Favorite" parameterType="java.util.Map">
+		select id,member_id as memberId,time,content,doc_id as docId
+		from
+		t_favorite
+		where doc_id = #{docId} and member_id = #{memberId}
+		limit 1
+	</select>
+
+	<select id="findList" resultType="Favorite" parameterType="java.util.Map">
+		select id,member_id as memberId,time,content,doc_id as docId
+		from
+		t_favorite
+		<if test="memberId != null">
+			where member_id = #{memberId}
+		</if>
+		<if test="type != null">
+			and type = #{type}
+		</if>
+		order by time desc
+		limit #{offset},#{size}
+
+	</select>
+
+	<select id="findToN" resultType="Favorite" parameterType="java.util.Map">
+		select id,member_id as memberId,time,content,doc_id as docId
+		from
+		t_favorite where 1 = 1
+		<if test="memberId != null">
+			and member_id = #{memberId}
+		</if>
+		<if test="type != 0">
+			and type = #{type}
+		</if>
+		order by time desc
+		limit 0,#{top}
+	</select>
+
+	<select id="getVideo" resultType="Video" parameterType="java.util.Map">
+		select
+		submission_system as submissionSystem, time, abstracts
+		from t_video
+		where jguid = #{jguid}
+		limit 1
+	</select>
+</mapper>    

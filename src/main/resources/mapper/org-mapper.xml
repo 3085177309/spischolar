@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.OrgDaoI">
+
+	<select id="findAll" resultType="Org">
+		select id,flag,name,ip_ranges as
+		ipRanges,template,contact_person as
+		contactPerson,contact,email,products,register_date as
+		registerDate,province,city,zyyx,jcryear,deliveryCount,userDeliveryCount,qunwpa
+		from t_org ORDER BY province
+	</select>
+
+	<select id="findProvince" resultType="Org">
+		select province
+		from t_org
+		group by province
+	</select>
+
+	<select id="findDepartments" resultType="Department">
+		select
+		t1.*,t2.name as
+		schoolName from t_department t1 left join t_org t2 on
+		t1.schoolId=t2.id
+		where t1.schoolId = #{schoolId} order by
+		t1.departmentId desc
+	</select>
+
+	<!-- <resultMap type="com.wd.backend.model.Org" id="Orgs"> <id property="id" 
+		column="id"/> <result property="flag" column="flag"/> <result property="name" 
+		column="name"/> <result property="ipRanges" column="ip_ranges"/> <result 
+		property="template" column="template"/> <result property="contactPerson" 
+		column="contact_person"/> <result property="contact" column="contact"/> <result 
+		property="email" column="email"/> <result property="products" column="products"/> 
+		<collection property="departments" ofType="com.wd.backend.model.Department"> 
+		<id property="departmentId" column="departmentId"/> <result property="departmentName" 
+		column="departmentName"/> <result property="departmentFlag" column="departmentFlag"/> 
+		</collection> </resultMap> -->
+
+
+
+	<!-- 插入机构信息 -->
+	<insert id="insert" parameterType="Org" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		t_org(flag,name,ip_ranges,remark,register_date,template,contact_person,contact,email,products,province,city,zyyx,jcryear,deliveryCount,userDeliveryCount)
+		values(#{flag},#{name},#{ipRanges},#{remark},#{registerDate},#{template},#{contactPerson},#{contact},#{email},#{products},#{province},#{city},#{zyyx},#{jcryear},#{deliveryCount},#{userDeliveryCount})
+	</insert>
+
+	<!-- 通过id查找机构信息 -->
+	<select id="findById" resultType="Org">
+		select
+		id,flag,name,ip_ranges as
+		ipRanges,remark,register_date as
+		registerDate,template,contact_person
+		as
+		contactPerson,contact,products,email,province,city,zyyx,jcryear,deliveryCount,userDeliveryCount,qunwpa
+		from t_org where id=#{id}
+	</select>
+
+	<!-- 通过Flag查找机构信息 -->
+	<select id="findByFlag" resultType="Org" parameterType="string">
+		select
+		id,flag,name,ip_ranges as ipRanges,remark,register_date as
+		registerDate,template,contact_person as
+		contactPerson,contact,products,province,city,zyyx,jcryear,deliveryCount,userDeliveryCount,qunwpa
+		from t_org where flag=#{flag}
+	</select>
+
+	<!-- 查找机构总数量 -->
+	<select id="findCount" resultType="int" parameterType="java.util.Map">
+		select count(id) from t_org
+		<if test="key != null">
+			where name like #{key}
+		</if>
+	</select>
+
+	<!-- 查找机构总数量 -->
+	<select id="findCountBy" resultType="int" parameterType="java.util.Map">
+		select count(distinct(flag)) as total from t_org t1 inner join
+		t_product t2 on t1.id=t2.org_id where 1=1
+		<if test="key != null">
+			and t1.name like #{key}
+		</if>
+		<if test="status != null">
+			and t2.status = #{status}
+		</if>
+		<if test="endDate != null">
+			and t2.end_date &lt; now()
+		</if>
+	</select>
+
+	<!-- 分页方式查找机构 -->
+	<select id="findPager" resultType="Org" parameterType="java.util.Map">
+		select
+		t1.id,t1.flag,t1.name,t1.ip_ranges as
+		ipRanges,t1.remark,t1.register_date as registerDate ,
+		t1.template,t1.contact_person as
+		contactPerson,t1.contact,t1.email,t1.products,t1.province,t1.city,t1.zyyx,t1.jcryear,deliveryCount,userDeliveryCount
+		from
+		t_org t1 left join t_product t2 on t1.id=t2.org_id where 1=1
+		<if test="key != null">
+			and t1.name like #{key}
+		</if>
+		<if test="status != null">
+			and t2.status = #{status}
+		</if>
+		<if test="endDate != null">
+			and t2.end_date &lt; now()
+		</if>
+		group by t1.flag order by t1.id desc
+		<if test="offset != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!-- 查找机构总数量 -->
+	<select id="findCountByProduct" resultType="int" parameterType="java.util.Map">
+		select count(t1.id) from t_org as t1,t_product as t2
+		<where>
+			t1.id=t2.org_id
+			<if test="productId != null">
+				and t2.pdt_id = #{productId}
+			</if>
+			<if test="name!=null">
+				and t1.name like #{name}
+			</if>
+		</where>
+	</select>
+
+	<!-- 分页方式查找机构 -->
+	<select id="findPagerByProduct" resultType="Org" parameterType="java.util.Map">
+		select
+		t1.id as id,t1.flag as flag,t1.name as name,t1.ip_ranges as
+		ipRanges,t1.remark as remark,
+		t1.register_date as registerDate
+		,t1.template as template,t1.contact_person as
+		contactPerson,
+		t1.contact
+		as contact,t1.email as email,t1.products as
+		products,deliveryCount,userDeliveryCount
+		from
+		t_org as t1,t_product as
+		t2
+		<where>
+			t1.id=t2.org_id
+			<if test="productId != null">
+				and t2.pdt_id = #{productId}
+			</if>
+			<if test="name!=null">
+				and t1.name like #{name}
+			</if>
+		</where>
+		order by t1.id desc
+		limit #{offset},#{size}
+	</select>
+
+	<!-- 更新机构信息 -->
+	<update id="update" parameterType="Org">
+		update
+		t_org
+		set
+		name=#{name},remark=#{remark},email=#{email}
+		,template=#{template},contact=#{contact},contact_person=#{contactPerson},ip_ranges=#{ipRanges},province=#{province},city=#{city}
+		<if test="products != null">
+			,products=#{products}
+		</if>
+		<if test="zyyx != null">
+			,zyyx=#{zyyx}
+		</if>
+		<if test="jcryear != null">
+			,jcryear=#{jcryear}
+		</if>
+		<if test="deliveryCount != null">
+			,deliveryCount=#{deliveryCount}
+		</if>
+		<if test="userDeliveryCount != null">
+			,userDeliveryCount=#{userDeliveryCount}
+		</if>
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找机构标识是否存在 -->
+	<select id="findExistsFlag" resultType="integer">
+		select 1 from t_org where
+		flag=#{flag}
+	</select>
+
+	<select id="findOrgNameExist" resultType="integer">
+		select 1 from t_org
+		where name=#{orgName}
+	</select>
+
+	<!-- 查找出指定id之外的所有机构的ip范围 -->
+	<select id="findAllIpRanges" resultType="string" parameterType="int">
+		select ip_ranges as ipRanges from t_org
+	</select>
+
+	<select id="findAllIpRangesWithoutCur" resultType="string">
+		select
+		ip_ranges as ipRanges from t_org where id!=#{id}
+	</select>
+
+	<!-- 更新机构ip信息 -->
+	<update id="updateIpRanges" parameterType="Org">
+		update
+		t_org
+		set
+		ip_ranges=#{ipRanges}
+		where
+		id=#{id}
+	</update>
+
+	<delete id="delete">
+		delete from t_org where id=#{id}
+	</delete>
+
+	<select id="findDepBySchool" resultType="Department"
+		parameterType="int">
+		SELECT * FROM t_department WHERE schoolId = #{schoolId}
+	</select>
+
+	<insert id="addDept" parameterType="Department"
+		useGeneratedKeys="true" keyProperty="id">
+		insert ignore t_department
+		(departmentName,schoolId)
+		values(#{departmentName},#{schoolId})
+	</insert>
+
+	<delete id="deleteDepartment">
+		delete from t_department where departmentId=#{id}
+	</delete>
+
+	<update id="updateDepartment" parameterType="Department">
+		UPDATE t_department
+		SET departmentName=#{departmentName} WHERE
+		departmentId=#{departmentId}
+	</update>
+
+	<select id="findDepartmentById" parameterType="int" resultType="Department">
+		SELECT * FROM t_department WHERE departmentId = #{departmentId}
+	</select>
+</mapper>    

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.SensitiveWordDaoI">
+
+	<insert id="insert" parameterType="SensitiveWord">
+		insert into
+		t_sensitive_word(words,org_flag)
+		values(#{words},#{orgFlag})
+	</insert>
+
+	<delete id="deleteById">
+		delete from t_sensitive_word where id=#{id}
+	</delete>
+
+	<select id="findCount" resultType="integer" parameterType="string">
+		select count(0) from t_sensitive_word where org_flag = #{orgFlag}
+	</select>
+
+	<select id="findByOrg" resultType="SensitiveWord" parameterType="java.util.Map">
+		select
+		id,words,org_flag as orgFlag
+		from
+		t_sensitive_word
+		where
+		org_flag=#{orgFlag}
+		limit
+		#{offset},#{size}
+	</select>
+
+	<select id="findAllByOrg" resultType="SensitiveWord"
+		parameterType="string">
+		select
+		id,words,org_flag as orgFlag
+		from
+		t_sensitive_word
+		where
+		org_flag=#{orgFlag} or org_flag is null
+	</select>
+
+</mapper>    

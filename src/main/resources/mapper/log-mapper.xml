@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.LogDaoI">
+
+	<select id="findSearchLog" resultType="SystemLog">
+		select
+		type_f,id,ip,org_flag as orgFlag,org_name as orgName,value_f as
+		value,date_f as date ,field_f as field
+		from
+		t_sys_log
+		where
+		org_flag=#{orgFlag}
+		and
+		value_f=#{value}
+		and
+		field_f=#{field}
+		and
+		type_f=#{type}
+		and
+		YEAR(date_f)=YEAR(CURDATE())
+		and
+		MONTH(date_f)=MONTH(CURDATE())
+	</select>
+
+	<insert id="insert" parameterType="SystemLog">
+		insert into
+		t_sys_log(type_f,id,ip,org_flag,org_name,value_f,field_f,date_f,site_flag)
+		values(#{type},#{id},#{ip},#{orgFlag},#{orgName},#{value},#{field},#{date},#{siteFlag})
+	</insert>
+
+	<!-- 期刊详细打开数 -->
+	<select id="getDetailOpenCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and
+		org_flag=#{orgFlag}
+		and
+		site_flag=#{siteFlag}
+		and
+		field_f='id' and
+		type_f=1
+	</select>
+
+	<!-- 期刊检索次数 -->
+	<select id="getJournalSearchCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f!='id'
+		and
+		field_f!='link'
+		and type_f=1
+	</select>
+
+	<!-- 文章检索次数 -->
+	<select id="getDocSearchCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		COUNT(distinct value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f!='link'
+		and type_f=2
+	</select>
+
+	<!-- 期刊主要检索词 -->
+	<select id="getJournalWordLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from(
+		select
+		COUNT(*)
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and (
+		field_f='all'
+		or
+		field_f='title'
+		or field_f='disciplineName'
+		)
+		and type_f=1
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findJournalWordLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and (
+		field_f='all'
+		or
+		field_f='title'
+		or field_f='disciplineName'
+		)
+		and type_f=1
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit #{offset},#{size}
+	</select>
+
+	<!-- 期刊主要检索issn -->
+	<select id="getJournalIssnLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from(
+		select
+		value_f
+		from
+		t_sys_log
+		where
+
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='issn'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findJournalIssnLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='issn'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit
+		#{offset},#{size}
+	</select>
+
+	<!-- 主要浏览的学科体系 -->
+	<select id="getJournalSysLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from (
+		select
+		value_f
+		from
+		t_sys_log
+		where
+
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='sys'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findJournalSysLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='sys'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit
+		#{offset},#{size}
+	</select>
+
+	<!-- 主要浏览的体系学科 -->
+	<select id="getJournalSysSubjLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from (
+		select
+		value_f
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='sysSub'
+		and type_f=1
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findJournalSysSubjLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='sysSub'
+		and type_f=1
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit
+		#{offset},#{size}
+	</select>
+
+	<!-- 主要查看的期刊 -->
+	<select id="getJournalDetailLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from (
+		select
+		value_f,COUNT(value_f)
+		from
+		t_sys_log
+		where
+
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='id'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findJournalDetailLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='id'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit
+		#{offset},#{size}
+	</select>
+
+	<!-- 频繁打开的期刊主页 -->
+	<select id="getJournalMainLinkLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from (
+		select
+		value_f,COUNT(value_f)
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='link'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findJournalMainLinkLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='link'
+		and
+		type_f=1
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit
+		#{offset},#{size}
+	</select>
+
+	<!-- 主要检索文章标题 -->
+	<select id="getDocTitleLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from (
+		select
+		value_f,COUNT(value_f)
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and (field_f='journal'
+		or field_f='title')
+		and type_f=2
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findDocTitleLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and (field_f='journal'
+		or field_f='title')
+		and type_f=2
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit #{offset},#{size}
+	</select>
+
+	<!-- 主要打开的文章连接 -->
+	<select id="getDocLinkLogCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select COUNT(*) as count from (
+		select
+		value_f,COUNT(value_f)
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='link'
+		and
+		type_f=2
+		group by
+		value_f,field_f
+		)tmp
+	</select>
+	<select id="findDocLinkLog" parameterType="java.util.Map"
+		resultType="SystemLog">
+		select
+		value_f as value,COUNT(value_f) as count
+		from
+		t_sys_log
+		where
+		YEAR(date_f)=YEAR(CURDATE())
+		<choose>
+			<when test="date >= 1">
+				and MONTH(date_f)=#{date}
+			</when>
+			<when test="null==date">
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</when>
+			<otherwise>
+				and DATE_SUB(CURDATE(), interval 30 day) &lt;= date_f
+			</otherwise>
+		</choose>
+		and org_flag=#{orgFlag}
+		and site_flag=#{siteFlag}
+		and field_f='link'
+		and
+		type_f=2
+		group by
+		value_f,field_f
+		order by
+		COUNT(value_f) desc
+		limit
+		#{offset},#{size}
+	</select>
+</mapper>    

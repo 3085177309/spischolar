@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.JournalUrlDaoI">
+	<cache type="com.wd.util.OSCacheUtil" eviction="FIFO"
+		flushInterval="300000" size="512" readOnly="true" />
+
+	<!-- 获取数据库链接 -->
+	<select id="findDbLink" resultType="JournalUrl" parameterType="java.lang.String"
+		useCache="true">
+		select
+		id,url as titleUrl,source as dbName from
+		jurl where
+		jguid=#{titleId} and type=2 and isavailable != -1
+	</select>
+
+	<!-- 获取主页链接 -->
+	<select id="findMainLink" resultType="JournalUrl" useCache="true">
+		select id,url as titleUrl,source as dbName from
+		jurl where
+		jguid=#{titleId} and type=1 and isavailable != -1 limit 1
+	</select>
+
+</mapper>    

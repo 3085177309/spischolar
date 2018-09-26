@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.AuthorityDatabaseDaoI">
+
+	<select id="findById" resultType="AuthorityDatabase"
+		parameterType="integer">
+		select
+		id,flag,partition_name as
+		partitionName,all_partition as allPartition,prefix,suffix,priority
+		,years,alias,intro
+		from
+		t_authority_database
+		where id=#{id}
+	</select>
+
+	<select id="findAll" resultType="AuthorityDatabase">
+		select
+		id,flag,partition_name as
+		partitionName,all_partition as allPartition,prefix,suffix,priority
+		,years,alias,intro
+		from
+		t_authority_database
+		order by priority DESC
+	</select>
+
+	<insert id="insert" parameterType="AuthorityDatabase">
+		insert
+		into
+		t_authority_database(flag,all_partition,prefix,suffix,partition_name,priority,years,alias,intro)
+		values
+		(#{flag},#{allPartition},#{prefix},#{suffix},#{partitionName},#{priority},#{years},#{alias},#{intro})
+	</insert>
+
+	<delete id="del">
+		delete from t_authority_database where id=#{id}
+	</delete>
+
+	<update id="update" parameterType="AuthorityDatabase">
+		update
+		t_authority_database
+		set
+		flag=#{flag},partition_name=#{partitionName},all_partition=#{allPartition},prefix=#{prefix},suffix=#{suffix},priority=#{priority}
+		,years=#{years},alias=#{alias},intro=#{intro}
+		where
+		id=#{id}
+	</update>
+
+	<select id="findFlagExists" resultType="integer">
+		select 1 from
+		t_authority_database where flag=#{flag}
+	</select>
+
+	<select id="findFlagExistsByParam" parameterType="java.util.Map"
+		resultType="integer">
+		select 1 from t_authority_database where id!=#{id} and
+		flag=#{flag}
+	</select>
+
+	<select id="getCountByKey" parameterType="java.util.Map"
+		resultType="integer">
+		select
+		count(id)
+		from
+		t_authority_database
+		<where>
+			<if test="key!=null">
+				flag like "%"#{key}"%"
+				or
+				prefix like "%"#{key}"%"
+				or
+				suffix
+				like "%"#{key}"%"
+				or
+				partition_name like "%"#{key}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="findByParams" parameterType="java.util.Map"
+		resultType="AuthorityDatabase">
+		select
+		id,flag,all_partition as
+		allPartition,prefix,suffix,partition_name as
+		partitionName,priority
+		,years,alias,intro
+		from
+		t_authority_database
+		<where>
+			<if test=" key != null ">
+				flag like "%"#{key}"%"
+				or
+				prefix like "%"#{key}"%"
+				or
+				suffix
+				like "%"#{key}"%"
+				or
+				partition_name like "%"#{key}"%"
+			</if>
+		</where>
+		order by id desc
+		limit #{offset},#{size}
+	</select>
+
+</mapper>    

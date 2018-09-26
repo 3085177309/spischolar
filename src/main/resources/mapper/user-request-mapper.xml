@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.UserRequestDaoI">
+
+	<insert id="insert" parameterType="UserRequest"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_user_request(url,param,function,time,school,member_id)
+		values(#{url},#{param},#{function},#{time},#{school},#{memberId})
+	</insert>
+
+	<select id="findAll" resultType="UserRequest" parameterType="java.util.Map">
+		select t_user_request.id as id, url, param, function, time,
+		t_user_request.school, member_id as memberId, nickname AS person, t_user_request.type
+		from t_user_request,t_member
+		WHERE t_user_request.member_id =
+		t_member.id
+		<if test="type != -1">
+			and type = #{type}
+		</if>
+		<if test="keyword != null">
+			and (t_user_request.school = #{keyword} or function =
+			#{keyword})
+		</if>
+		ORDER BY TIME DESC LIMIT #{offset}, #{size}
+	</select>
+
+	<select id="findAllCount" parameterType="java.util.Map"
+		resultType="Integer">
+		select count(*) from t_user_request where 1=1
+		<if test="type != -1">
+			and type = #{type}
+		</if>
+		<if test="keyword != null">
+			and (school = #{keyword} or function = #{keyword})
+		</if>
+	</select>
+
+	<update id="updateById" parameterType="integer">
+		update t_user_request set
+		type = 1 where id = #{id}
+	</update>
+
+
+</mapper>    

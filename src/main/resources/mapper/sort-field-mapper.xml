@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.SortFieldDaoI">
+
+	<select id="findAll" resultType="SortField">
+		select id,type,field_s as fields
+		from t_sort_field
+	</select>
+
+</mapper>    

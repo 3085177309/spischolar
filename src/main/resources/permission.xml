@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<permission>
+
+	<role id="1" name="系统超级管理员">
+		<menus>
+			<item name="机构管理" url="backend/org/index" />
+			<item name="权威数据库分区管理" url="backend/authorityDatabase/index" />
+			<item name="代理管理" url="backend/proxy/index" />
+		</menus>
+		<permissions>
+			<!-- 缓存管理 -->
+			<permission flag='cache_mgr' name='重加载全局缓存'
+				url='backend/cache/overallSituation/reload' />
+
+			<!-- 进入首页 -->
+			<permission flag='in_index' name='进入首页' url='backend/index' />
+			<permission flag='org_index' name='机构管理首页' url='backend/org/index' />
+			<permission flag='authority_db_index' name='权威数据库管理首页'
+				url='backend/authorityDatabase/index' />
+			<permission flag='dsd' name='进入首页' url='backend/flow/index' />
+			<!-- 机构管理部分 -->
+			<permission flag='add_org' name='新增机构信息' url='backend/org/add' />
+			<permission flag='edit_org' name='修改机构信息' url='backend/org/edit' />
+			<permission flag='del_org' name='删除机构信息' url='backend/org/delete/**' />
+			<permission flag='org_list' name='加载机构列表' url='backend/org/list' />
+			<permission flag='org_detail' name='获取机构详细信息' url='backend/org/detail/**' />
+			<permission flag='mgr_ip_range' name='ip范围管理'
+				url='backend/org/editIpRange' />
+			<permission flag='org_cache_reload' name='机构缓存重加载'
+				url="backend/cache/orgCacheReload/**" />
+			<permission flag='jnav_org_list' name='期刊导航机构列表'
+				url='backend/org/jnav/list' />
+			<permission flag='dnav_org_list' name='数据库导航机构列表'
+				url='backend/org/dnav/list' />
+			<permission flag='academic_org_list' name='轻学术机构列表'
+				url='backend/org/academic/list' />
+			<permission flag='org_resource' name='机构资源'
+				url='backend/org/resource/**' />
+			<permission flag='add_home' name='访问机构首页' url='backend/org/home/**' />
+			<permission flag='chk_org_name' name='检测机构名是否存在'
+				url='backend/org/checkOrgNameExist' />
+			<permission flag='chk_ip' name='检测IP范围是否存在'
+				url='backend/org/checkIpRangesExist' />
+			<permission flag='chk_org_flag' name='检测机构标识是否存在'
+				url='backend/org/checkFlagExist' />
+
+
+			<!-- 人员管理部分 -->
+			<permission flag='person_list' name='查看机构列表'
+				url='backend/person/list/**' />
+			<permission flag='person_index' name='人员管理首页'
+				url='backend/person/index/**' />
+			<permission flag='add_person' name='新增人员' url='backend/person/add' />
+			<permission flag='prepare_add_person' name='准备新增人员'
+				url='backend/person/add/**' />
+			<permission flag='edit_person' name='编辑人员' url='backend/person/edit' />
+			<permission flag='del_person' name='删除人员' url='backend/person/del/**' />
+			<permission flag='detail_person' name='人员详细'
+				url='backend/person/detail/**' />
+			<permission flag='reset_pwd' name='重置密码'
+				url='backend/person/resetPwd/**' />
+			<permission flag='change_pwd' name='修改个人密码'
+				url='backend/person/editPwd' />
+
+			<!-- 站点管理部分 -->
+			<permission flag='in_site_mgr' name='进入站点管理首页'
+				url='backend/site/index/**' />
+			<permission flag='add_site' name='新建站点' url='backend/site/add' />
+			<permission flag='upload_template' name='上传模版'
+				url='backend/site/upload/template' />
+			<permission flag='use_current_template' name='使用当前模版'
+				url='backend/site/editSiteTemplateRoot/**' />
+			<permission flag='deploy_site' name='发布站点'
+				url='backend/site/deploy/**' />
+			<permission flag='undeploy_site' name='反发布站点'
+				url='backend/site/undeploy/**' />
+			<permission flag='del_site' name='删除站点' url='backend/site/del/**' />
+			<permission flag='load_site_tree' name='加载站点树'
+				url='backend/site/list/**' />
+			<permission flag='load_file_content' name='加载模版文件内容'
+				url='backend/site/loadFileContent' />
+			<permission flag='site_detail' name='站点详细'
+				url='backend/site/detail/**' />
+			<permission flag='save_file_change' name='保存文件修改'
+				url='backend/site/saveFileContent' />
+			<permission flag='del_site_template' name='删除站点模版目录'
+				url='backend/site/templateDel/**' />
+
+			<!-- 站点日志管理部分 -->
+			<permission flag='index_site_search_log' name='首页_站点检索日志'
+				url='backend/log/index/**' />
+			<permission flag='journal_word_site_search_log' name='期刊主要检索词_站点检索日志'
+				url='backend/log/journalWord/**' />
+			<permission flag='journal_issn_site_search_log' name='issn_日志'
+				url='backend/log/issnLog/**' />
+			<permission flag='journal_sys_site_search_log' name='体系_日志'
+				url='backend/log/sysLog/**' />
+			<permission flag='journal_sys_subj_site_search_log' name='体系学科_日志'
+				url='backend/log/sysSubjLog/**' />
+			<permission flag='journal_detail_site_search_log' name='详细_日志'
+				url='backend/log/detailLog/**' />
+			<permission flag='journal_home_page_search_log' name='主页打开_日志'
+				url='backend/log/journalHomePage/**' />
+			<permission flag='doc_title_log' name='文档标题检索_日志'
+				url='backend/log/docTitleLog/**' />
+			<permission flag='doc_home_page_log' name='文档主页_日志'
+				url='backend/log/docHomePage/**' />
+
+			<!-- 规则管理部分 -->
+			<!-- <permission flag='in_rule_mgr' name='进入规则管理首页' url='backend/rule/index/**' 
+				/> <permission flag='search_db' name='数据库查找' url='backend/rule/dbList/**' 
+				/> <permission flag='rule_detail' name='查看规则详细' url='backend/rule/ruleIndex/**' 
+				/> <permission flag='rule_list' name='获取规则列表' url='backend/rule/ruleList/**' 
+				/> <permission flag='prepare_add_rule' name='准备新增规则' url='backend/rule/add/**' 
+				/> <permission flag='add_rule' name='新增规则' url='backend/rule/add' /> <permission 
+				flag='del_rule' name='删除规则' url='backend/rule/del/**' /> <permission flag='prepare_edit_rule' 
+				name='准备编辑规则' url='backend/rule/edit/**' /> <permission flag='edit_rule' 
+				name='编辑规则' url='backend/rule/edit' /> -->
+
+			<!-- 权威数据库部分 -->
+			<permission flag='authority_db_list' name='获取权威数据库列表'
+				url='backend/authorityDatabase/list/**' />
+			<permission flag='add_authority_db' name='新增权威数据库'
+				url='backend/authorityDatabase/add' />
+			<permission flag='detail_authority_db' name='获取权威数据库详细信息'
+				url='backend/authorityDatabase/edit/**' />
+			<permission flag='del_authority_db' name='删除权威数据库详细信息'
+				url='backend/authorityDatabase/del/**' />
+
+			<permission flag="proxy_manage_list" name="代理管理"
+				url="backend/proxy/index" />
+			<permission flag="proxy_manage_detail" name="代理详情"
+				url="backend/proxy/detail" />
+
+			<!-- 文献传递 -->
+			<permission flag="delivery_list" name="文献传递列表"
+				url="backend/delivery/list" />
+			<permission flag="delivery_list_org" name="机构文献传递列表"
+				url="backend/delivery/list/**" />
+			<permission flag="delivery_process" name="文献传递处理"
+				url="backend/delivery/process" />
+			<!-- 数据库配置 -->
+			<permission flag="purchasedb_add" name="数据库配置添加"
+				url="backend/purchasedb/add" />
+			<permission flag="purchasedb_list" name="数据库配置列表"
+				url="backend/purchasedb/list/**" />
+			<permission flag="purchasedb_del" name="数据库配置删除"
+				url="backend/purchasedb/del/**" />
+			<permission flag="purchasedb_edit" name="数据库配置编辑"
+				url="backend/purchasedb/edit/**" />
+			<!-- URL规则配置 -->
+			<permission flag="urlrule_add" name="URL规则添加" url="backend/urlrule/add" />
+			<permission flag="urlrule_list" name="URL规则列表"
+				url="backend/urlrule/list/**" />
+			<permission flag="urlrule_del" name="URL规则删除"
+				url="backend/urlrule/del/**" />
+
+			<!-- 公告 -->
+			<permission flag="news_add" name="添加公告" url="backend/news/add" />
+			<permission flag="news_edit" name="编辑公告" url="backend/news/edit/**" />
+			<permission flag="news_list" name="公告列表" url="backend/news/list" />
+			<permission flag="news_del" name="删除公告" url="backend/news/delete/**" />
+			<permission flag="news_verify" name="显示"
+				url="backend/news/varify/**" />
+
+			<!-- 系统更新 -->
+			<permission flag="updatelog_add" name="添加系统日志"
+				url="backend/updatelog/add" />
+			<permission flag="updatelog_edit" name="编辑系统日志"
+				url="backend/updatelog/edit/**" />
+			<permission flag="updatelog_list" name="系统日志列表"
+				url="backend/updatelog/list" />
+			<permission flag="updatelog_del" name="删除系统日志"
+				url="backend/updatelog/delete/**" />
+			<permission flag="updatelog_varify" name="显示"
+				url="backend/updatelog/varify" />
+
+			<!-- 用户反馈 -->
+			<permission flag="feedback_list" name="用户反馈列表"
+				url="backend/feedback/list" />
+			<permission flag="feedback_answer" name="删除系统日志"
+				url="backend/feedback/answer/**" />
+
+			<!-- 注册用户 -->
+			<permission flag="member_list" name="注册用户列表" url="backend/member/list" />
+
+			<!-- 单页 -->
+			<permission flag="page_add" name="添加单页" url="backend/page/add" />
+			<permission flag="page_edit" name="编辑单页" url="backend/page/edit/**" />
+			<permission flag="page_list" name="单页列表" url="backend/page/list" />
+			<permission flag="page_del" name="删除单页" url="backend/page/delete/**" />
+		</permissions>
+	</role>
+
+	<role id="2" name="机构超级管理员">
+		<menus>
+			<item name="机构管理" url="backend/org/index" />
+		</menus>
+		<permissions>
+
+			<!-- 进入首页 -->
+			<permission flag='in_index' name='进入首页' url='backend/index' />
+			<permission flag='org_index' name='机构管理首页' url='backend/org/index' />
+
+			<!-- 机构管理部分 -->
+			<permission flag='edit_org' name='修改机构信息' url='backend/org/edit' />
+			<permission flag='org_detail' name='获取机构详细信息' url='backend/org/detail/**' />
+			<permission flag='mgr_ip_range' name='ip范围管理'
+				url='backend/org/editIpRange' />
+			<permission flag='org_cache_reload' name='机构缓存重加载'
+				url="backend/cache/orgCacheReload/**" />
+
+			<!-- 人员管理部分 -->
+			<permission flag='person_list' name='查看机构列表'
+				url='backend/person/list/**' />
+			<permission flag='person_index' name='人员管理首页'
+				url='backend/person/index/**' />
+			<permission flag='add_person' name='新增人员' url='backend/person/add' />
+			<permission flag='prepare_add_person' name='准备新增人员'
+				url='backend/person/add/**' />
+			<permission flag='edit_person' name='编辑人员' url='backend/person/edit' />
+			<permission flag='del_person' name='删除人员' url='backend/person/del/**' />
+			<permission flag='detail_person' name='人员详细'
+				url='backend/person/detail/**' />
+			<permission flag='reset_pwd' name='重置密码'
+				url='backend/person/resetPwd/**' />
+			<permission flag='change_pwd' name='修改个人密码'
+				url='backend/person/editPwd' />
+
+			<!-- 站点管理部分 -->
+			<permission flag='in_site_mgr' name='进入站点管理首页'
+				url='backend/site/index/**' />
+			<permission flag='add_site' name='新建站点' url='backend/site/add' />
+			<permission flag='upload_template' name='上传模版'
+				url='backend/site/upload/template' />
+			<permission flag='use_current_template' name='使用当前模版'
+				url='backend/site/editSiteTemplateRoot/**' />
+			<permission flag='deploy_site' name='发布站点'
+				url='backend/site/deploy/**' />
+			<permission flag='undeploy_site' name='反发布站点'
+				url='backend/site/undeploy/**' />
+			<permission flag='del_site' name='删除站点' url='backend/site/del/**' />
+			<permission flag='load_site_tree' name='加载站点树'
+				url='backend/site/list/**' />
+			<permission flag='load_file_content' name='加载模版文件内容'
+				url='backend/site/loadFileContent' />
+			<permission flag='site_detail' name='站点详细'
+				url='backend/site/detail/**' />
+			<permission flag='save_file_change' name='保存文件修改'
+				url='backend/site/saveFileContent' />
+			<permission flag='del_site_template' name='删除站点模版目录'
+				url='backend/site/templateDel/**' />
+
+			<!-- 站点日志管理部分 -->
+			<permission flag='index_site_search_log' name='首页_站点检索日志'
+				url='backend/log/index/**' />
+			<permission flag='journal_word_site_search_log' name='期刊主要检索词_站点检索日志'
+				url='backend/log/journalWord/**' />
+			<permission flag='journal_issn_site_search_log' name='issn_日志'
+				url='backend/log/issnLog/**' />
+			<permission flag='journal_sys_site_search_log' name='体系_日志'
+				url='backend/log/sysLog/**' />
+			<permission flag='journal_sys_subj_site_search_log' name='体系学科_日志'
+				url='backend/log/sysSubjLog/**' />
+			<permission flag='journal_detail_site_search_log' name='详细_日志'
+				url='backend/log/detailLog/**' />
+			<permission flag='journal_home_page_search_log' name='主页打开_日志'
+				url='backend/log/journalHomePage/**' />
+			<permission flag='doc_title_log' name='文档标题检索_日志'
+				url='backend/log/docTitleLog/**' />
+			<permission flag='doc_home_page_log' name='文档主页_日志'
+				url='backend/log/docHomePage/**' />
+
+			<!-- 规则管理部分 -->
+			<!-- <permission flag='in_rule_mgr' name='进入规则管理首页' url='backend/rule/index/**' 
+				/> <permission flag='search_db' name='数据库查找' url='backend/rule/dbList/**' 
+				/> <permission flag='rule_detail' name='查看规则详细' url='backend/rule/ruleIndex/**' 
+				/> <permission flag='rule_list' name='获取规则列表' url='backend/rule/ruleList/**' 
+				/> <permission flag='prepare_add_rule' name='准备新增规则' url='backend/rule/add/**' 
+				/> <permission flag='add_rule' name='新增规则' url='backend/rule/add' /> <permission 
+				flag='del_rule' name='删除规则' url='backend/rule/del/**' /> <permission flag='prepare_edit_rule' 
+				name='准备编辑规则' url='backend/rule/edit/**' /> <permission flag='edit_rule' 
+				name='编辑规则' url='backend/rule/edit' /> -->
+
+		</permissions>
+	</role>
+
+	<role id="3" name="机构站点管理员">
+		<menus>
+			<item name="机构管理" url="backend/org/index" />
+		</menus>
+		<permissions>
+			<!-- 进入首页 -->
+			<permission flag='in_index' name='进入首页' url='backend/index' />
+			<permission flag='org_index' name='机构管理首页' url='backend/org/index' />
+
+			<!-- 机构管理部分 -->
+			<permission flag='org_detail' name='获取机构详细信息' url='backend/org/detail/**' />
+			<permission flag='mgr_ip_range' name='ip范围管理'
+				url='backend/org/editIpRange' />
+			<permission flag='org_cache_reload' name='机构缓存重加载'
+				url="backend/cache/orgCacheReload/**" />
+
+			<permission flag='change_pwd' name='修改个人密码'
+				url='backend/person/editPwd' />
+
+			<!-- 站点管理部分 -->
+			<permission flag='in_site_mgr' name='进入站点管理首页'
+				url='backend/site/index/**' />
+			<permission flag='deploy_site' name='发布站点'
+				url='backend/site/deploy/**' />
+			<permission flag='load_site_tree' name='加载站点树'
+				url='backend/site/list/**' />
+			<permission flag='load_file_content' name='加载模版文件内容'
+				url='backend/site/loadFileContent' />
+			<permission flag='site_detail' name='站点详细'
+				url='backend/site/detail/**' />
+			<permission flag='save_file_change' name='保存文件修改'
+				url='backend/site/saveFileContent' />
+
+			<!-- 站点日志管理部分 -->
+			<permission flag='index_site_search_log' name='首页_站点检索日志'
+				url='backend/log/index/**' />
+			<permission flag='journal_word_site_search_log' name='期刊主要检索词_站点检索日志'
+				url='backend/log/journalWord/**' />
+			<permission flag='journal_issn_site_search_log' name='issn_日志'
+				url='backend/log/issnLog/**' />
+			<permission flag='journal_sys_site_search_log' name='体系_日志'
+				url='backend/log/sysLog/**' />
+			<permission flag='journal_sys_subj_site_search_log' name='体系学科_日志'
+				url='backend/log/sysSubjLog/**' />
+			<permission flag='journal_detail_site_search_log' name='详细_日志'
+				url='backend/log/detailLog/**' />
+			<permission flag='journal_home_page_search_log' name='主页打开_日志'
+				url='backend/log/journalHomePage/**' />
+			<permission flag='doc_title_log' name='文档标题检索_日志'
+				url='backend/log/docTitleLog/**' />
+			<permission flag='doc_home_page_log' name='文档主页_日志'
+				url='backend/log/docHomePage/**' />
+
+			<!-- 规则管理部分 -->
+			<!-- <permission flag='in_rule_mgr' name='进入规则管理首页' url='backend/rule/index/**' 
+				/> <permission flag='search_db' name='数据库查找' url='backend/rule/dbList/**' 
+				/> <permission flag='rule_detail' name='查看规则详细' url='backend/rule/ruleIndex/**' 
+				/> <permission flag='rule_list' name='获取规则列表' url='backend/rule/ruleList/**' 
+				/> <permission flag='prepare_add_rule' name='准备新增规则' url='backend/rule/add/**' 
+				/> <permission flag='add_rule' name='新增规则' url='backend/rule/add' /> <permission 
+				flag='del_rule' name='删除规则' url='backend/rule/del/**' /> <permission flag='prepare_edit_rule' 
+				name='准备编辑规则' url='backend/rule/edit/**' /> <permission flag='edit_rule' 
+				name='编辑规则' url='backend/rule/edit' /> -->
+		</permissions>
+	</role>
+
+</permission>

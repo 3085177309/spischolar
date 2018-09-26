@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.PageDaoI">
+
+	<insert id="insert" parameterType="Page" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into t_page(title,content,intro,add_date)
+		values(#{title},#{content},#{intro},#{addDate})
+	</insert>
+
+	<update id="update" parameterType="Page">
+		update
+		t_page
+		set
+		title=#{title},content=#{content},intro=#{intro},add_date=#{addDate}
+		where
+		id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="integer">
+		delete from t_page where
+		id=#{id}
+	</delete>
+
+	<select id="get" parameterType="integer" resultType="Page">
+		select
+		id,title,content,intro,add_date as addDate from t_page
+		where id = #{id}
+	</select>
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(id) from t_page where 1=1
+		<if test="key != null">
+			title like #{key} or content like #{key}
+		</if>
+	</select>
+
+	<select id="findList" resultType="Page" parameterType="java.util.Map">
+		select id,title,content,intro,add_date as addDate
+		from t_page where 1=1
+		<if test="key != null">
+			and title like #{key} or content like #{key}
+		</if>
+		order by add_date desc
+		limit #{offset},#{size}
+	</select>
+
+</mapper>    

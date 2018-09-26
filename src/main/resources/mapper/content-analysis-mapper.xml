@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.ContentAnalysisDaoI">
+
+	<!-- 首页 -->
+	<select id="getAllSearchInfoCount" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT
+		SUM(IF((system_id = 1 AND system_type=2 ),1,0)) AS journalNum,
+		SUM(IF((system_id = 1 AND
+		method = 'search' AND system_type = 1),1,0))
+		AS journalSearchNum,
+		SUM(IF((system_id = 2 AND system_type = 1),1,0))
+		AS scholarSearchNum,
+		SUM(IF((keyword LIKE '%(20%)' AND system_id = 1
+		and system_type= 1 and
+		method != 'search'),1,0)) AS subjectNum,
+		SUM(IF((db IS NOT NULL AND db
+		!=''),1,0)) AS dbNum
+		FROM
+		t_content_analysis WHERE 1=1 AND org_flag IS
+		NOT NULL
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			AND TIME > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND TIME &lt; #{endTime}
+		</if>
+	</select>
+
+	<!-- 检索分析(所有学校) -->
+	<select id="getSearch" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT journalSearchNum,scholarSearchNum,num,t1.flag as flag,t2.name
+		as school FROM (
+		SELECT
+		SUM(IF((system_id = 1 AND method = 'search' AND
+		system_type = 1),1,0)) AS
+		journalSearchNum,
+		SUM(IF((system_id = 2 AND
+		system_type = 1),1,0)) AS
+		scholarSearchNum,
+		SUM(IF(((system_id = 2 AND
+		system_type = 1) OR
+		(system_id = 1 AND method = 'search' AND
+		system_type = 1)),1,0)) AS
+		num,
+		org_flag as flag FROM t_content_analysis
+		where 1=1 AND org_flag IS
+		NOT NULL
+		<if test="beginTime != null">
+			AND TIME > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND TIME &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		GROUP BY org_flag ORDER BY num DESC
+		) AS t1 LEFT JOIN t_org AS t2 ON
+		t1.flag = t2.flag WHERE 1 =1 AND num > 0
+		<if test="key != null">
+			AND NAME like "%"#{key}"%"
+		</if>
+
+	</select>
+
+	<!-- 检索分析(所有学校)(有记录天数) -->
+	<select id="getSearchDay" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT COUNT(*) AS dayNum,org_flag AS orgFlag FROM (
+		SELECT LEFT(TIME,10) AS TIME,org_flag FROM
+		t_content_analysis
+		WHERE org_flag IS NOT NULL
+		AND ((system_id = 2 AND
+		system_type = 1) OR (system_id = 1 AND method =
+		'search' AND
+		system_type = 1))
+		<if test="beginTime != null">
+			AND TIME > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND TIME &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		GROUP BY LEFT(TIME,10),org_flag
+		) AS t GROUP BY org_flag
+	</select>
+
+
+	<!-- 浏览分析 期刊 -->
+	<select id="getJournalAnalysis" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT t1.num,t1.keyword,t2.total from
+		(
+		select count(*) num,keyword
+		from t_content_analysis
+		where system_id=1 and system_type=2 and time
+		&gt;= #{beginTime} and time
+		&lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		group by keyword
+		) t1
+		join
+		(
+		select count(*) total from t_content_analysis
+		where system_id=1 and system_type=2 and time &gt;= #{beginTime} and
+		time
+		&lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		) t2
+		on 1=1
+		order by t1.num desc
+		<if test="offset != null">
+			LIMIT #{offset},#{size}
+		</if>
+	</select>
+
+	<!-- 浏览分析 期刊数量(分页) -->
+	<select id="getJournalTotal" resultType="Integer" parameterType="java.util.Map">
+		select count(distinct(keyword)) from t_content_analysis
+		where
+		system_id=1 and system_type=2 and time &gt;= #{beginTime} and time
+		&lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+	</select>
+	<!-- 浏览分析 所有期刊数量 -->
+	<select id="getAllJournalTotal" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(*) from t_content_analysis
+		where system_id=1 and
+		system_type=2 and time &gt;= #{beginTime} and time
+		&lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+	</select>
+
+	<!-- 浏览分析 学科数量 -->
+	<select id="getSubjectTotal" resultType="Integer" parameterType="java.util.Map">
+		select count(distinct(keyword)) from t_content_analysis
+		where keyword
+		like '%(20%)' and system_id = 1 and system_type= 1 and method
+		!=
+		'search'
+		and time &gt;= #{beginTime} and time &lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+	</select>
+
+	<!-- 浏览分析 所有学科数量 -->
+	<select id="getAllSubjectTotal" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(*) from t_content_analysis
+		where keyword like '%(20%)' and
+		system_id = 1 and system_type= 1 and method
+		!= 'search'
+		and time &gt;=
+		#{beginTime} and time &lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+	</select>
+
+	<!-- 浏览分析 学科 -->
+	<select id="getSubjectAnalysis" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT t1.num,t1.keyword,t2.total from
+		(
+		select count(*) num,keyword
+		from t_content_analysis where keyword like
+		'%(20%)' and system_id = 1
+		and system_type= 1 and method != 'search'
+		and time &gt;= #{beginTime}
+		and time &lt;= #{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		group by keyword
+		) t1
+		join
+		(
+		select count(*) total from t_content_analysis
+		where keyword like '%(20%)'
+		and system_id = 1 and system_type= 1 and
+		method != 'search'
+		and time &gt;= #{beginTime} and time &lt;=
+		#{endTime}
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		) t2
+		on 1=1
+		order by t1.num desc
+		<if test="offset != null">
+			LIMIT #{offset},#{size}
+		</if>
+	</select>
+	<!-- 期刊检索 -->
+	<select id="findSearchJournal" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT num,keyword,CAST(num/total*100 AS DECIMAL(10, 2)) AS percent
+		FROM(
+		SELECT COUNT(*) AS num,keyword FROM t_content_analysis
+		WHERE
+		system_id = 1 AND method = 'search'  AND system_type = 1
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		GROUP BY keyword ) t1 JOIN (
+		SELECT COUNT(*) AS total FROM
+		t_content_analysis
+		WHERE system_id = 1 AND method = 'search'  AND system_type = 1 
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		) t2 ON 1=1 ORDER BY num DESC
+		<if test="offset != null">
+			LIMIT #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="findSearchJournalCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT COUNT(1) FROM (
+		SELECT COUNT(*) AS num,keyword FROM
+		t_content_analysis
+		WHERE system_id = 1 AND method = 'search' and
+		system_type = 1
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		GROUP BY keyword ORDER BY num DESC) AS t
+	</select>
+
+
+	<!-- 文章检索 -->
+	<select id="findSearchScholar" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT num,keyword,CAST(num/total*100 AS DECIMAL(10, 2)) AS percent
+		FROM(
+		SELECT COUNT(*) AS num,keyword FROM t_content_analysis
+		WHERE
+		system_id = 2 and system_type = 1
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		GROUP BY keyword ) t1 JOIN (
+		SELECT COUNT(*) AS total FROM
+		t_content_analysis
+		WHERE system_id = 2
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		) t2 ON 1=1 ORDER BY num DESC
+		<if test="offset != null">
+			LIMIT #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="findSearchScholarCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT COUNT(1) FROM (
+		SELECT COUNT(*) AS num,keyword FROM
+		t_content_analysis
+		WHERE system_id = 2 and system_type = 1
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND type = #{type}
+		</if>
+		GROUP BY keyword ORDER BY num DESC) AS t
+	</select>
+
+
+	<!-- 浏览分析 学科体系 -->
+	<select id="getDbAnalysis" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT count(db) num,db from t_content_analysis where db is not null
+		and db !=''
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time &gt;= #{beginTime}
+		</if>
+		<if test="endTime != null">
+			and time &lt;= #{endTime}
+		</if>
+		<if test="type != -1">
+			and type= #{type}
+		</if>
+		group by db
+	</select>
+
+	<!-- 浏览分析 学科体系 -->
+	<select id="getPageClickInfo" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT pageName,num, CAST(num/total*100 AS DECIMAL(10, 2)) AS
+		percent,total FROM (
+		SELECT page_name as pageName,COUNT(1) as num FROM
+		`t_chickPage` WHERE
+		previous_page = #{pageName}
+		AND begin_time &gt;
+		#{beginTime} AND begin_time &lt; #{endTime} GROUP BY
+		page_name
+		<if
+			test="pageName == '蛛网学术搜索首页'  or pageName == '蛛网学术搜索结果列表'  or pageName == '首页'">
+			UNION ALL
+			SELECT '高级检索' AS pageName,COUNT(1) as num FROM `t_chickPage`
+			WHERE
+			previous_page = #{pageName} AND
+			page_name = '蛛网学术搜索结果列表' AND url
+			LIKE '%journal=%' AND begin_time >
+			#{beginTime} AND begin_time &lt;
+			#{endTime}
+			<if test="pageName != '蛛网学术搜索结果列表'">
+				UNION ALL
+				SELECT '学术搜索' AS pageName,COUNT(1) as num FROM
+				`t_chickPage` WHERE
+				previous_page = #{pageName} AND
+				page_name =
+				'蛛网学术搜索结果列表' AND url not LIKE '%journal=%' AND begin_time >
+				#{beginTime} AND begin_time &lt; #{endTime}
+			</if>
+		</if>
+		<if test="pageName == '期刊详细页面 ' or pageName == '蛛网学术搜索结果列表'">
+			UNION ALL
+			SELECT '被引次数' AS pageName,COUNT(1) as num FROM `t_chickPage`
+			WHERE
+			previous_page = #{pageName} AND
+			page_name = '蛛网学术搜索结果列表' AND url
+			LIKE '%type=quote%'AND begin_time >
+			#{beginTime} AND begin_time &lt;
+			#{endTime}
+			UNION ALL
+			SELECT '相关文章' AS pageName,COUNT(1) as num FROM
+			`t_chickPage` WHERE
+			previous_page = #{pageName} AND
+			page_name =
+			'蛛网学术搜索结果列表' AND url LIKE '%type=related%'AND begin_time >
+			#{beginTime} AND begin_time &lt; #{endTime}
+			UNION ALL
+			SELECT '所有版本' AS
+			pageName,COUNT(1) as num FROM `t_chickPage` WHERE
+			previous_page =
+			#{pageName} AND
+			page_name = '蛛网学术搜索结果列表' AND url LIKE
+			'%type=VERSION%'AND begin_time >
+			#{beginTime} AND begin_time &lt;
+			#{endTime}
+			<if test="pageName != '蛛网学术搜索结果列表'">
+				UNION ALL
+				SELECT '学术搜索' AS pageName,COUNT(1) as num FROM
+				`t_chickPage` WHERE
+				previous_page = #{pageName} AND
+				page_name =
+				'蛛网学术搜索结果列表' AND url not LIKE '%type=quote%' AND url not LIKE
+				'%type=related%' AND url not LIKE '%type=VERSION%' AND begin_time >
+				#{beginTime} AND begin_time &lt; #{endTime}
+			</if>
+		</if>
+		<if test="pageName == '蛛网学术搜索结果列表'">
+			UNION ALL
+			SELECT '学术搜索' AS pageName,COUNT(1) as num FROM
+			`t_chickPage` WHERE
+			previous_page = #{pageName} AND
+			page_name =
+			'蛛网学术搜索结果列表' AND url not LIKE '%journal=%' AND url not LIKE
+			'%type=quote%' AND url not LIKE '%type=related%' AND url not LIKE
+			'%type=VERSION%' AND begin_time > #{beginTime} AND begin_time &lt;
+			#{endTime}
+		</if>
+		<if test="pageName == '学术期刊指南浏览列表' or pageName == '学术期刊指南检索列表'">
+			UNION ALL
+			SELECT 'oa资源' AS pageName,COUNT(1) AS num FROM
+			`t_chickPage` WHERE
+			previous_page = #{pageName} AND
+			page_name =
+			'学术期刊指南浏览列表' AND url LIKE '%filterCdt=oa_3_1_1%'AND begin_time >
+			#{beginTime} AND begin_time &lt; #{endTime}
+			UNION ALL
+			SELECT '所有资源' AS
+			pageName,COUNT(1) AS num FROM `t_chickPage` WHERE
+			previous_page =
+			#{pageName} AND
+			page_name = '学术期刊指南浏览列表' AND url NOT LIKE
+			'%filterCdt=oa_3_1_1%'AND begin_time
+			> #{beginTime} AND begin_time
+			&lt; #{endTime}
+		</if>
+		) AS t1
+		JOIN (SELECT COUNT(1) AS total FROM `t_chickPage` WHERE
+		previous_page = #{pageName}
+		AND begin_time > #{beginTime} AND
+		begin_time &lt; #{endTime}) AS t2 ON 1=1 order by num desc
+	</select>
+
+
+
+	<!-- 数据添加（获取元数据：查询关键词出现最多的） -->
+	<select id="getMaxKeyWord" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT SUM(IF((TYPE = 0 ),1,0)) AS num, SUM(IF((TYPE = 1 ),1,0)) AS
+		addNum ,url 
+		<if test="journalType != 5">
+			,keyword
+		</if>
+		<if test="journalType == 5">
+			,db as keyword
+		</if>
+		FROM t_content_analysis WHERE 1=1
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time &gt;= #{beginTime}
+		</if>
+		<if test="endTime != null">
+			and time &lt;= #{endTime}
+		</if>
+		<!-- <if test="type != -1"> and type= #{type} </if> -->
+		<if test="journalType == 1"> <!-- 期刊浏览 -->
+			and system_id = 1 AND system_type = 2
+		</if>
+		<if test="journalType == 2"> <!-- 期刊检索 -->
+			and system_id = 1 AND system_type = 1 and method = 'search'
+		</if>
+		<if test="journalType == 3"> <!-- 文章检索 -->
+			and system_id = 2 AND system_type = 1
+		</if>
+		<if test="journalType == 4"><!-- 浏览学科 -->
+			and keyword LIKE '%(20%)' AND system_id = 1 and system_type= 1 and
+			method != 'search'
+		</if>
+		<if test="journalType == 5"><!-- 浏览学科体系 -->
+			and db IS NOT NULL AND db !=''
+		</if>
+		GROUP BY
+		<if test="journalType != 5">
+			keyword
+		</if>
+		<if test="journalType == 5">
+			db
+		</if>
+		ORDER BY num DESC,addNum DESC 
+		<!-- LIMIT 0, #{size} -->
+	</select>
+
+	<!-- 数据添加(获取元数据：关键词月份出现频次) -->
+	<select id="getByKeyWord" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT SUM(IF((TYPE = 0 ),1,0)) AS num, SUM(IF((TYPE = 1 ),1,0)) AS
+		addNum, LEFT(TIME,7) as times, keyword,url FROM t_content_analysis WHERE
+		1=1
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time &gt;= #{beginTime}
+		</if>
+		<if test="endTime != null">
+			and time &lt;= #{endTime}
+		</if>
+		<!-- <if test="type != -1"> and type= #{type} </if> -->
+		<if test="journalType != 5">
+			and keyword = #{keyword}
+		</if>
+		<if test="journalType == 5">
+			and db = #{keyword}
+		</if>
+		<if test="journalType == 1"> <!-- 期刊浏览 -->
+			and system_id = 1 AND system_type = 2
+		</if>
+		<if test="journalType == 2"> <!-- 期刊检索 -->
+			and system_id = 1 AND system_type = 1 and method = 'search'
+		</if>
+		<if test="journalType == 3"> <!-- 文章检索 -->
+			and system_id = 2 AND system_type = 1
+		</if>
+		<if test="journalType == 4"><!-- 浏览学科 -->
+			and keyword LIKE '%(20%)' AND system_id = 1 and system_type= 1 and
+			method != 'search'
+		</if>
+		<if test="journalType == 5"><!-- 浏览学科体系 -->
+			and db IS NOT NULL AND db !=''
+		</if>
+		GROUP BY times ORDER BY num,addNum DESC
+	</select>
+	
+	
+	
+	
+	
+	<!-- 内容分析 -->
+	<insert id="insertAnalysis" parameterType="History"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_content_analysis(keyword,url,time,batch_id,system_id,system_type,member_id,org_flag,db,method,type)
+		values(#{keyword},#{url},#{time},#{batchId},#{systemId},#{systemType},#{memberId},#{orgFlag},#{db},#{method},#{type})
+	</insert>
+	
+	
+
+</mapper>    

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.SystemManageDaoI">
+
+	<select id="getTreeNodeById" resultType="Powers" parameterType="integer">
+		SELECT id,name as columnName,pid FROM t_back_column WHERE id=#{id}
+	</select>
+
+	<select id="getTreeNodeByPid" resultType="Powers" parameterType="integer">
+		SELECT id,name as columnName,pid FROM t_back_column WHERE pid=#{id}
+		order by oderid
+	</select>
+
+	<select id="getOrgBycid" resultType="Org" parameterType="integer">
+		SELECT
+		t2.id,t2.flag,t2.name,t2.province,t2.city from t_column_org t1
+		left
+		join
+		t_org t2 on t1.org_flag=t2.flag
+		where
+		t1.cid=#{id}
+		order by t2.id
+	</select>
+
+	<insert id="insert" parameterType="java.util.Map"
+		useGeneratedKeys="true" keyProperty="id">
+		replace into
+		t_column_org(cid,org_flag)
+		values(#{cid},#{flag})
+	</insert>
+
+	<select id="getTotal" resultType="Integer" parameterType="String">
+		SELECT
+		count(*) from t_column_org where org_flag=#{flag} and cid!=1
+	</select>
+
+	<select id="getTotalByPid" resultType="Integer" parameterType="java.util.Map">
+		SELECT count(*) from t_column_org t1 left join t_back_column t2 on
+		t1.cid=t2.id
+		where t1.cid!=1
+		<if test="pid != null">
+			and t2.pid=#{pid}
+		</if>
+		<if test="flag != null">
+			and t1.org_flag=#{flag}
+		</if>
+	</select>
+
+	<select id="getCount" resultType="Integer" parameterType="java.util.Map">
+		SELECT count(*) from t_column_org where 1=1
+		<if test="cid != null">
+			and cid=#{cid}
+		</if>
+		<if test="flag != null">
+			and org_flag=#{flag}
+		</if>
+	</select>
+	<!-- 根据父id获取子栏目的个数 -->
+	<select id="getChildCount" resultType="Integer" parameterType="Integer">
+		SELECT count(*) from t_back_column where pid = #{id}
+	</select>
+	<!-- 根据父id获取已插入权限的子项目个数 -->
+	<select id="getInsertCount" resultType="Integer" parameterType="java.util.Map">
+		SELECT count(*) from t_column_org t1 left join t_back_column t2 on
+		t1.cid=t2.id
+		where t2.pid=#{pid} and t1.org_flag=#{flag}
+	</select>
+	<!-- 删除权限 -->
+	<delete id="delete" parameterType="java.util.Map">
+		delete from t_column_org where cid!=1
+		<if test="cid != null">
+			and cid=#{cid}
+		</if>
+		<if test="flag != null">
+			and org_flag=#{flag}
+		</if>
+	</delete>
+
+	<select id="getTreeNode" resultType="Powers" parameterType="java.util.Map">
+		SELECT t1.id,t1.name as columnName,t1.pid from t_back_column t1
+		left
+		join t_column_org t2 on t1.id=t2.cid
+		where t1.id=#{id} and
+		t2.org_flag=#{flag}
+	</select>
+
+	<select id="getTreeNodeByOrg" resultType="Powers" parameterType="java.util.Map">
+		SELECT t1.id,t1.name as columnName,t1.pid from t_back_column t1
+		left
+		join t_column_org t2 on t1.id=t2.cid
+		where t1.pid=#{id} and
+		t2.org_flag=#{flag}
+		order by t1.oderid
+	</select>
+
+	<select id="getDetailByName" resultType="java.util.Map"
+		parameterType="String">
+		<bind name="pattern" value="'%' + _parameter + '%'" />
+		SELECT t1.flag,t2.cid,t3.pid,t1.name as schoolName,t1.province,t3.name
+		as columnName,t1.id as orgId from t_column_org t2
+		left join t_org t1 on
+		t1.flag=t2.org_flag
+		left join t_back_column t3 on t2.cid=t3.id
+		where
+		(t1.name like #{pattern}
+		or t3.name = #{name}) and t2.cid!=1
+		group by
+		t1.flag order by
+		t1.province,t1.id
+	</select>
+
+	<select id="getPermissionOrg" resultType="Org">
+		SELECT t1.org_flag as
+		flag,t2.name from t_column_org t1
+		left join t_org t2 on
+		t1.org_flag=t2.flag
+		group by t1.org_flag
+	</select>
+
+	<select id="getPowersIds" resultType="Integer" parameterType="String">
+		SELECT cid from t_column_org where org_flag=#{flag}
+		order by cid
+	</select>
+
+	<select id="getOrgByName" resultType="Org" parameterType="String">
+		<bind name="pattern" value="'%' + _parameter + '%'" />
+		SELECT id,flag,name from t_org where name like #{pattern}
+	</select>
+
+	<select id="getPermissionByOrgId" resultType="Powers"
+		parameterType="Integer">
+		select t3.id,t3.name as
+		columnName,t3.url,t3.pid,t3.permissionUrl from t_org t1
+		left join
+		t_column_org t2 on t1.flag=t2.org_flag
+		left join t_back_column t3 on
+		t2.cid=t3.id
+		where t3.id!=1 and t1.id=#{orgid}
+		order by t3.pid,t3.oderid
+	</select>
+
+
+
+
+	<!-- 指标权限设置 -->
+	<select id="getAll" resultType="Quota">
+		SELECT id,name as quotaName from
+		t_back_quota
+	</select>
+	<select id="getQuotaTotal" resultType="Integer">
+		SELECT
+		count(distinct(org_flag)) as num from t_quota_org
+	</select>
+	<select id="getOrgQuota" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT t1.org_flag as flag,t3.id as orgId,t3.name as schoolName from
+		t_quota_org t1
+		left join t_org t3 on t1.org_flag=t3.flag group by
+		org_flag
+		order by t1.id
+		desc
+		<if test="offset != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+	<select id="getQuotaByOrg" resultType="Quota" parameterType="String">
+		SELECT t1.id,t2.name as quotaName from t_quota_org t1
+		left join
+		t_back_quota t2 on t1.qid=t2.id
+		where t1.org_flag=#{flag}
+		order by t2.id
+	</select>
+	<insert id="insertQuota" parameterType="java.util.Map"
+		useGeneratedKeys="true" keyProperty="id">
+		replace into
+		t_quota_org(qid,org_flag)
+		values(#{qid},#{flag})
+	</insert>
+	<delete id="deleteQuota">
+		delete from t_quota_org where id=#{id}
+	</delete>
+
+	<delete id="deleteQuotaBySchool" parameterType="String">
+		delete from
+		t_quota_org where org_flag=#{flag}
+	</delete>
+
+	<select id="getSchoolQuoByName" resultType="java.util.Map"
+		parameterType="String">
+		<bind name="pattern" value="'%' + _parameter + '%'" />
+		SELECT t1.id,t1.qid,t1.org_flag as flag,t2.name as quotaName,t3.id as
+		orgId,t3.name as schoolName,t3.province from t_quota_org t1
+		left join
+		t_back_quota t2 on t1.qid=t2.id
+		left join t_org t3 on
+		t1.org_flag=t3.flag
+		where t2.name like #{pattern} or t3.name like
+		#{pattern}
+		group by
+		t1.org_flag order by t3.province,t3.id
+	</select>
+
+	<select id="getQuotaByOrgId" resultType="Quota" parameterType="Integer">
+		select t3.id,t3.name as quotaName from t_org t1
+		left join t_quota_org
+		t2 on t1.flag=t2.org_flag
+		left join t_back_quota t3 on t2.qid=t3.id
+		where t1.id=#{orgid} order by t3.id
+	</select>
+</mapper>    

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 自动添加数据（pv，uv） -->
+<mapper namespace="com.wd.browse.dao.AdditionDaoI">
+	<!-- 查询该学校的常用关键词 -->
+	<select id="getKeyWordCount" resultType="integer" parameterType="java.util.Map">
+		SELECT COUNT(1) FROM `t_content_analysis`
+		WHERE system_type = 1 
+		<if test="systemId != null">
+			AND system_id = #{systemId}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="systemId == 1">
+			AND method = 'search'
+		</if>
+	</select>
+	<!-- 查询该学校的常用关键词 -->
+	<select id="getScholarKeyWord" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT keyword,url,batch_id FROM `t_content_analysis`
+		WHERE system_type = 1 
+		<if test="systemId != null">
+			AND system_id = #{systemId}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="systemId == 1">
+			AND method = 'search'
+		</if>
+		LIMIT #{offset},1
+	</select>
+	<!-- 查询该学校的常用关键词 -->
+	<select id="getScholarKeyWordList" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT keyword,url,batch_id FROM `t_content_analysis`
+		WHERE system_type = 1 
+		<if test="systemId != null">
+			AND system_id = #{systemId}
+		</if>
+		<if test="school != null">
+			and org_flag = #{school}
+		</if>
+		<if test="systemId == 1">
+			AND method = 'search'
+		</if>
+		LIMIT 0,#{offset}
+	</select>
+	<!-- 关键词的文章详细数量 -->
+	<select id="getScholarInfoCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT count(1) FROM t_content_analysis WHERE system_id
+		= 2 AND system_type = 2
+		AND batch_id = #{batchId}
+	</select>
+	<!-- 关键词的文章详细标题 -->
+	<select id="getScholarInfo" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT keyword,url FROM t_content_analysis WHERE
+		system_id =
+		2 AND system_type = 2
+		AND batch_id = #{batchId}
+		LIMIT
+		#{offset},1
+	</select>
+
+	<!-- 获取数据添加信息(自动) -->
+	<select id="getAddBrowseAutomaticByFlag" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+		id,org_flag AS orgFlag,
+		org_name AS orgName, min_pv AS minPv, max_pv AS maxPv,
+		min_pv_wave AS minPvWave, max_pv_wave AS maxPvWave, pv_ratio AS pvRatio,
+		page_ratio AS pageRatio, time_ratio AS timeRatio, month_ratio AS monthRatio,avgTime,newOld
+		FROM
+		t_add_browse where 1 = 1 
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag} 
+		</if>
+	</select>
+
+	<insert id="insertAddBrowseAutomatic" parameterType="java.util.Map">
+		insert into t_add_browse (org_flag,org_name,min_pv,max_pv,min_pv_wave,
+		max_pv_wave,pv_ratio,page_ratio,time_ratio,month_ratio,avgTime,newOld) 
+		value (#{orgFlag},#{orgName},#{minPv},#{maxPv},#{minPvWave},#{maxPvWave},#{pvRatio}
+		,#{pageRatio},#{timeRatio},#{monthRatio},#{avgTime},#{newOld})
+	</insert>
+	<update id="editAddBrowseAutomatic">
+		update t_add_browse set org_flag = #{orgFlag},org_name =#{orgName} ,min_pv =#{minPv},
+		max_pv = #{maxPv},min_pv_wave =#{minPvWave},max_pv_wave =#{maxPvWave} ,pv_ratio =#{pvRatio},
+		page_ratio =#{pageRatio} ,time_ratio =#{timeRatio} ,month_ratio =#{monthRatio},avgTime = #{avgTime},
+		newOld = #{newOld}  
+		where id = #{id}
+	</update>
+	<insert id="contentAnalysisLog" parameterType="java.util.Map">
+		insert into t_contentAnalysis_log (content,state,type,username,time,org_flag,org_name,browse_hand_id) 
+		value (#{content},#{state},#{type},#{username},#{time},#{orgFlag},#{orgName},#{browseHandId})
+	</insert>
+	
+	
+	<!-- 获取数据添加信息(手动)(记录) -->
+	<select id="getAddBrowseHand" resultType="java.util.Map" parameterType="integer">
+		SELECT id,org_flag as orgFlag, org_name as orgName, begin_time as beginTime,end_time as endTime,
+		avgTime,pv,type,page_ratio as pageRatio,time_ratio as timeRatio,username,time ,newOld 
+		FROM t_add_browse_hand 
+		WHERE 1=1 
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag} 
+		</if>
+		ORDER BY time DESC
+		<if test="offset != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+	<select id="getAddBrowseHandCount" resultType="integer" parameterType="integer">
+		SELECT count(1)  
+		FROM t_add_browse_hand 
+		WHERE 1=1 
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag} 
+		</if>
+	</select>
+	
+	<select id="getAddBrowseHandById" resultType="java.util.Map" parameterType="integer">
+		SELECT id,org_flag as orgFlag, org_name as orgName, begin_time as beginTime,end_time as endTime,
+		avgTime,pv,type,page_ratio as pageRatio,time_ratio as timeRatio,username,time,newOld  
+		FROM t_add_browse_hand 
+		WHERE 1=1 and id= #{id} 
+		<if test="type != null">
+			and type = #{type} 
+		</if>
+	</select>
+	
+	<insert id="insertAddBrowseHand"  parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">   
+            SELECT LAST_INSERT_ID() as id  
+        </selectKey>  
+		insert into t_add_browse_hand (org_flag,org_name,begin_time,end_time,avgTime,pv,type,page_ratio,time_ratio,username,newOld,time) 
+		value (#{orgFlag},#{orgName},#{beginTime},#{endTime},#{avgTime},#{pv},#{type},#{pageRatio},#{timeRatio},#{username},#{newOld},NOW()) 
+	</insert>
+	
+	<update id="updateAddBrowseHand" parameterType="java.util.Map">
+		update t_add_browse_hand set type = #{type}
+		where id = #{browseHandId}
+	</update>
+	
+	<!-- 获取日志  browseHandId:手动添加数据的id（组合）-->
+	<select id="getContentAnalysisLog" resultType="java.util.Map" parameterType="integer">
+		SELECT content,state,type,username,time,org_flag as orgFlag,org_name as orgName, browse_hand_id as browseHandId
+		FROM t_contentAnalysis_log 
+		WHERE 1=1 
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag} 
+		</if>
+		<if test="type != null">
+			and type = #{type} 
+		</if>
+		<if test="keyword != null">
+			and content like #{keyword} 
+		</if>
+		<if test="journalType != null">
+			and content like #{journalType} 
+		</if>
+		<if test="browseHandId != null">
+			and browse_hand_id like #{browseHandId} 
+		</if>
+		ORDER BY TIME DESC
+		<if test="offset != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+	<select id="getContentAnalysisLogCount" resultType="integer" parameterType="integer">
+		SELECT count(1)
+		FROM t_contentAnalysis_log 
+		WHERE 1=1 
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag} 
+		</if>
+		<if test="type != null">
+			and type = #{type} 
+		</if>
+		<if test="keyword != null">
+			and content like #{keyword} 
+		</if>
+		<if test="journalType != null">
+			and content like #{journalType} 
+		</if>
+		ORDER BY TIME DESC
+	</select>
+	
+	<insert id="insertCount" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+		insert into t_run_count (org_flag,time,pv) 
+		value (#{orgFlag},NOW(),#{pv})
+	</insert>
+
+</mapper>    

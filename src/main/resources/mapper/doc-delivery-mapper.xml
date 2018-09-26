@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.DocDeliveryDaoI">
+
+	<update id="updates" parameterType="java.util.Map">
+		update t_delivery set
+		member_id = #{memberId} where member_id = #{oldId}
+	</update>
+
+	<select id="findByUrl" resultType="DocDelivery" parameterType="DocDelivery">
+		select
+		id,email,title,url,org_flag as orgFlag,org_name as orgName
+		,process_type as
+		processType,procesor_name as procesorName,procesor_id
+		as procesorId
+		,add_date as addDate,path,product_id as productId
+		from
+		t_delivery where product_id = 2
+		and email=#{email}
+		<if test="url != ''">
+			and url=#{url}
+		</if>
+		<if test="url == ''">
+			and title=#{title}
+		</if>
+	</select>
+	<!-- 复用 -->
+	<select id="findByReuse" resultType="DocDelivery" parameterType="DocDelivery">
+		select
+		title,url,path
+		from
+		t_delivery where product_id = 2
+		and title=#{title} and url=#{url} and
+		process_type = 6 group by title,path,url
+	</select>
+
+
+	<select id="findById" resultType="DocDelivery" parameterType="long">
+		select
+		id,email,title,url,org_flag as orgFlag,org_name as orgName
+		,process_type as
+		processType,procesor_name as procesorName,procesor_id
+		as procesorId
+		,add_date as addDate,process_date as
+		processDate,path,product_id as
+		productId
+		from
+		t_delivery
+		where id=#{id}
+	</select>
+
+	<insert id="insert" parameterType="DocDelivery"
+		useGeneratedKeys="true" keyProperty="id">
+		insert
+		into
+		t_delivery(email,title,url,org_flag,org_name,process_type,procesor_name,procesor_id,add_date,path,member_id,product_id,process_date)
+		values
+		(#{email},#{title},#{url},#{orgFlag},#{orgName},#{processType},#{procesorName},#{procesorId},#{addDate},#{path},#{memberId},#{productId},#{processDate})
+	</insert>
+
+	<delete id="del">
+		delete from t_delivery where id=#{id}
+	</delete>
+
+	<update id="update" parameterType="DocDelivery">
+		update
+		t_delivery
+		set
+		email=#{email},title=#{title},url=#{url},org_flag=#{orgFlag},org_name=#{orgName},process_type=#{processType}
+		,procesor_name=#{procesorName},procesor_id=#{procesorId},process_date=#{processDate},path=#{path},product_id=#{productId}
+		where
+		id=#{id}
+	</update>
+	<!-- 前台查询文献传递 -->
+	<select id="findCountByParamsIndex" parameterType="java.util.Map"
+		resultType="integer">
+		select
+		count(id)
+		from
+		t_delivery
+		<where>
+			1=1
+			<if test="productId != null">
+				and product_id = #{productId}
+			</if>
+			<if test="processType == 3"><!-- 代传递 -->
+				and (process_type= 0)
+			</if>
+			<if test="processType == 0"><!-- 传递中 -->
+				and (process_type=2 or process_type=4)
+			</if>
+			<if test="processType == 1"><!-- 文献传递成功 -->
+				and (process_type= 1 or process_type=6 or process_type=7)
+			</if>
+			<if test="processType == 2"><!-- 无结果 -->
+				and (process_type= 3 or process_type=5 )
+			</if>
+			<if test="memberId != 0 and email != null">
+				and member_id = #{memberId} or email = #{email}
+			</if>
+			<if test="memberId == 0 and email != null">
+				and email = #{email}
+			</if>
+			<if test="memberId != 0 and email == null">
+				and member_id = #{memberId}
+			</if>
+			<if test="title != null">
+				and title like #{title}
+			</if>
+		</where>
+	</select>
+	<!-- 后台查询文献传递 -->
+	<select id="findCountByParams" parameterType="java.util.Map"
+		resultType="integer">
+		select
+		count(id)
+		from
+		t_delivery
+		<where>
+			1=1
+			<if test="productId != null">
+				and product_id = #{productId}
+			</if>
+			<if test="orgFlag!=null">
+				and org_flag=#{orgFlag}
+			</if>
+			<if test="orgName!=null">
+				and org_name=#{orgName}
+			</if>
+			<if test="processType==1">
+				and (process_type= 1 or process_type=6)
+			</if>
+			<if test="processType==7">
+				and process_type= 1
+			</if>
+			<if test="processType!=null and processType!=7 and processType!=1">
+
+				and process_type = #{processType}
+
+			</if>
+			<if test="procesorId!=null">
+				and procesor_id=#{procesorId}
+			</if>
+			<if test="keyword!=null">
+				and (title like "%"#{keyword}"%" or email like
+				"%"#{keyword}"%")
+			</if>
+			<if test="email != null">
+				and email=#{email}
+			</if>
+			<if test="memberId != null">
+				and member_id = #{memberId}
+			</if>
+			<if test="beginTime != null">
+				and add_date > #{beginTime}
+			</if>
+			<if test="endTime != null">
+				AND add_date &lt; #{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="findExist" parameterType="DocDelivery" resultType="integer">
+		select count(0) from t_delivery
+		where title=#{title} and url=#{url} and
+		email=#{email} and product_id = 2
+	</select>
+	<!-- 前台文献传递 -->
+	<select id="findListByParamsIndex" parameterType="java.util.Map"
+		resultType="DocDelivery">
+		select
+		id,email,title,url,org_flag as orgFlag,org_name as orgName
+		,process_type as
+		processType,procesor_name as procesorName,procesor_id
+		as procesorId
+		,add_date as addDate,path,product_id as productId,help_id as helpId 
+		,TIMESTAMPDIFF(SECOND ,process_date,NOW()) AS time 
+		from
+		t_delivery
+		<where>
+			1=1
+			<if test="productId != null">
+				and product_id = #{productId}
+			</if>
+			<if test="processType == 3"><!-- 代传递 -->
+				and (process_type= 0)
+			</if>
+			<if test="processType == 0"><!-- 传递中 -->
+				and (process_type=2 or process_type=4)
+			</if>
+			<if test="processType == 1"><!-- 文献传递成功 -->
+				and (process_type= 1 or process_type=6 or process_type=7)
+			</if>
+			<if test="processType == 2"><!-- 无结果 -->
+				and (process_type= 3 or process_type=5 )
+			</if>
+			<if test="memberId != 0 and email != null">
+				and member_id = #{memberId} or email = #{email}
+			</if>
+			<if test="memberId == 0 and email != null">
+				and email = #{email}
+			</if>
+			<if test="memberId != 0 and email == null">
+				and member_id = #{memberId}
+			</if>
+			<if test="title != null">
+				and title like #{title}
+			</if>
+		</where>
+		order by add_date desc
+		limit #{offset},#{size}
+	</select>
+	<!-- 后台文献传递 -->
+	<select id="findListByParams" parameterType="java.util.Map"
+		resultType="DocDelivery">
+		select
+		id,email,title,url,org_flag as orgFlag,org_name as orgName
+		,process_type as processType,procesor_name as procesorName,procesor_id as procesorId
+		,process_date as processDate,add_date as addDate,path,product_id as productId,help_id as helpId
+		from
+		t_delivery
+		<where>
+			1=1
+			<if test="productId != null">
+				and product_id = #{productId}
+			</if>
+			<if test="orgFlag!=null">
+				and org_flag=#{orgFlag}
+			</if>
+			<if test="orgName!=null">
+				and org_name=#{orgName}
+			</if>
+			<if test="processType==1">
+				and (process_type= 1 or process_type=6)
+			</if>
+			<if test="processType==7">
+				and process_type= 1
+			</if>
+			<if test="processType!=null and processType!=7 and processType!=1">
+				and process_type = #{processType}
+			</if>
+			<if test="procesorId!=null">
+				and procesor_id=#{procesorId}
+			</if>
+			<if test="keyword!=null">
+				and (title like "%"#{keyword}"%" or email like
+				"%"#{keyword}"%")
+			</if>
+			<if test="email != null">
+				and email=#{email}
+			</if>
+			<if test="memberId != null">
+				and member_id = #{memberId}
+			</if>
+			<if test="beginTime != null">
+				and add_date > #{beginTime}
+			</if>
+			<if test="endTime != null">
+				AND add_date &lt; #{endTime}
+			</if>
+		</where>
+		order by add_date desc
+		limit #{offset},#{size}
+	</select>
+
+	<select id="findTop" parameterType="java.util.Map" resultType="DocDelivery">
+		select
+		id,email,title,url,org_flag as orgFlag,org_name as orgName
+		,process_type as
+		processType,procesor_name as procesorName,procesor_id
+		as procesorId
+		,add_date as addDate,path,product_id as productId
+		from
+		t_delivery
+		<where>
+			member_id = #{memberId}
+		</where>
+		order by add_date desc
+		limit 0,#{top}
+	</select>
+
+	<!-- 后台文献传递 -->
+	<select id="findcountByEmail" parameterType="java.util.Map"
+		resultType="integer">
+		select count(*) from t_delivery where 1=1 and product_id =
+		2
+		and email=#{email}
+		and add_date > #{time}
+	</select>
+
+	<!-- 后台文献传递(权限管理) -->
+	<select id="findDeliveryValidity" parameterType="java.util.Map"
+		resultType="DeliveryValidity">
+		SELECT d.id as id,d.email AS email,d.count AS COUNT,d.org_name AS
+		orgName,d.org_flag AS orgFlag,d.end_time AS endTime,d.time AS TIME,
+		d.procesor_id AS procesorId,d.procesor_name AS procesorName,m.id AS
+		isRegister FROM (
+		SELECT * FROM `t_delivery_count` WHERE 1=1
+		<if test="keyWord != null">
+			and email LIKE "%"#{keyWord}"%" OR org_name LIKE
+			"%"#{keyWord}"%"
+		</if>
+		) AS d LEFT JOIN t_member AS m ON d.email = m.email order by time desc
+		limit #{offset},#{size}
+	</select>
+
+	<select id="findDeliveryValidityCount" parameterType="java.util.Map"
+		resultType="integer">
+		SELECT count(*) FROM `t_delivery_count` WHERE 1=1
+		<if test="keyWord != null">
+			and email LIKE "%"#{keyWord}"%" OR org_name LIKE
+			"%"#{keyWord}"%"
+		</if>
+
+	</select>
+
+	<insert id="addDeliveryValidity" parameterType="DocDelivery">
+		insert
+		into
+		t_delivery_count(email,count,org_flag,org_name,end_time,time,procesor_name,procesor_id)
+		values
+		(#{email},#{count},#{orgFlag},#{orgName},#{endTime},#{time},#{procesorName},#{procesorId})
+	</insert>
+
+	<update id="updateDeliveryValidity" parameterType="DocDelivery">
+		update
+		t_delivery_count
+		set
+		email=#{email},count=#{count},org_flag=#{orgFlag},org_name=#{orgName},end_time=#{endTime},time=#{time},procesor_name=#{procesorName},procesor_id=#{procesorId}
+		where
+		id=#{id}
+	</update>
+
+	<delete id="deleteDeliveryValidity" parameterType="integer">
+		delete from
+		t_delivery_count where id = #{id}
+	</delete>
+
+	<select id="findcountByEmailFromValidity" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		SELECT count FROM `t_delivery_count` WHERE 1=1 AND end_time > NOW()
+		<if test="email != null">
+			and email = #{email}
+		</if>
+	</select>
+
+	<!-- 查询文献传递统计 -->
+	<select id="getDeliveryRecord" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		org_flag as orgFlag,org_name as orgName,
+		COUNT(*) as num,
+		SUM(IF((process_type =
+		1 or process_type = 6),1,0))/COUNT(process_type)
+		AS successTime,
+		COUNT(DISTINCT(email)) AS userNum,
+		COUNT(process_type)/COUNT(DISTINCT(email)) AS avgUser
+		FROM t_delivery
+		WHERE org_flag IS NOT NULL and product_id = 2
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="key != null">
+			AND org_name like "%"#{key}"%"
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY org_flag, org_name order by num desc
+		<!-- <if test="offset != null"> LIMIT #{offset},#{size} </if> -->
+	</select>
+
+	<!-- 查询文献传递统计(有记录天数) -->
+	<select id="getDeliveryRecordDay" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT COUNT(*) as dayNum,org_flag as orgFlag FROM (
+		SELECT LEFT(add_date,10) AS add_date,org_flag FROM
+		t_delivery
+		WHERE org_flag IS NOT NULL and product_id = 2
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY LEFT(add_date,10),org_flag
+		) AS t GROUP BY org_flag
+	</select>
+
+	<!-- 查询文献传递统计 -->
+	<select id="getDeliveryRecordCount" parameterType="java.util.Map"
+		resultType="integer">
+		SELECT COUNT(DISTINCT(org_flag)) FROM t_delivery
+		WHERE org_flag IS NOT
+		NULL and product_id = 2
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+	</select>
+
+
+	<!-- 查询文献传递统计 -->
+	<select id="getDeliveryRecordByOrgFlag" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT t1.email AS email,num,
+		successTime,
+		t1.org_name AS orgName,
+		t2.username AS username
+		FROM (
+		SELECT email,COUNT(*) AS num,
+		SUM(IF((process_type = 1 or
+		process_type = 6),1,0))/COUNT(process_type)
+		AS successTime,
+		org_name,member_id
+		FROM t_delivery WHERE 1=1 and
+		org_flag IS NOT NULL
+		and product_id = 2
+		<if test="email != null">
+			and email like "%"#{email}"%"
+		</if>
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY email,org_flag,org_name,member_id
+		) AS t1 LEFT JOIN t_member t2 ON member_id =
+		t2.id AND t1.email = t2.email
+		order by num desc
+		<!-- <if test="offset != null"> LIMIT #{offset},#{size} </if> -->
+	</select>
+	<!-- 查询文献传递统计(有数据的天) -->
+	<select id="getDeliveryRecordByOrgFlagDay" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT COUNT(*) AS dayNum,email FROM (
+		SELECT LEFT(add_date,10),email FROM t_delivery
+		WHERE
+		org_flag IS NOT NULL and product_id = 2
+		<if test="email != null">
+			and email like "%"#{email}"%"
+		</if>
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY LEFT(add_date,10),email
+		) AS t GROUP BY email
+	</select>
+
+	<!-- 查询文献传递统计 -->
+	<select id="getDeliveryRecordByOrgFlagCount" parameterType="java.util.Map"
+		resultType="integer">
+		SELECT count(*)
+		FROM (
+		SELECT email,COUNT(*) AS num,
+		member_id
+		FROM
+		t_delivery WHERE 1=1 and
+		org_flag IS NOT NULL and product_id = 2
+		<if test="email != null">
+			and email like "%"#{email}"%"
+		</if>
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY email,org_flag,member_id
+		) AS t1 LEFT JOIN t_member t2 ON member_id =
+		t2.id AND t1.email = t2.email
+	</select>
+
+	<!-- 查询文献传递总请求次数 -->
+	<select id="getDeliveryRecordByOrgFlagAllCount" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		SELECT sum(num)
+		FROM (
+		SELECT email,COUNT(*) AS num,
+		member_id
+		FROM
+		t_delivery WHERE 1=1 and org_flag IS NOT NULL and product_id = 2
+		<if test="email != null">
+			and email like "%"#{email}"%"
+		</if>
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY email,org_flag,member_id
+		) AS t1 LEFT JOIN t_member t2 ON member_id =
+		t2.id AND t1.email = t2.email
+	</select>
+
+
+
+	<!-- 手动数据添加 （数据展示） -->
+	<select id="getDeliveryRecordTitle" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT SUM(IF((TYPE = 0 ),1,0)) AS num, SUM(IF((TYPE = 1 ),1,0)) AS
+		addNum ,email
+		FROM t_delivery WHERE 1=1
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag}
+		</if>
+		GROUP BY email ORDER BY num DESC 
+		<!-- LIMIT 0, #{size} -->
+	</select>
+	<!-- 根据标题查时间段的数据量 -->
+	<select id="getDeliveryRecordByTitle" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT SUM(IF((TYPE = 0 ),1,0)) AS num, SUM(IF((TYPE = 1 ),1,0)) AS
+		addNum , LEFT(add_date,7) AS times, title
+		FROM t_delivery WHERE 1=1
+		<if test="beginTime != null">
+			and add_date > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND add_date &lt; #{endTime}
+		</if>
+		<if test="orgFlag != null">
+			and org_flag = #{orgFlag}
+		</if>
+		AND email = #{email}
+		GROUP BY times,title ORDER BY num DESC
+	</select>
+	
+	<!-- 文献互助中心 -->
+	<select id="findDiliveryHelpCount" parameterType="java.util.Map"
+		resultType="integer">
+		select count(id) from t_delivery where 1=1 and product_id = 2
+		<if test="processType == 1 "> <!-- 待应助 -->
+			<!-- and process_type != 1 and process_type != 6 and process_type != 3 and process_type != 5  -->
+			and process_type != 1 and process_type != 6 and process_type != 3 and process_type != 5 
+			and process_type != 4 
+		</if>
+		<if test="processType ==2"> <!-- 应助完成 -->
+			<!-- and (process_type = 1 or process_type = 6) AND process_date IS NOT NULL
+ 			AND process_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)    -->
+ 			and (process_type = 1 or process_type = 6) <!-- and  help_id = 3  -->
+ 			<!-- AND TIMESTAMPDIFF(SECOND ,process_date,NOW()) &lt; 60*60*24*15    (去掉)已完成TAB内容显示全部成功的记录-->
+		</if>
+		<if test="val != null "> <!-- 查询 -->
+			<!-- and (email like #{val} or title like #{val}) 
+			AND ((process_type = 1 OR process_type = 6) 
+			AND TIMESTAMPDIFF(SECOND ,process_date,NOW()) &lt; 1296000 
+			OR (process_type !=1 AND process_type != 6)) -->
+			and (email = #{email} or title like #{val}) 
+			AND (process_type = 0 OR process_type = 2 
+			OR ((process_type = 1 OR process_type = 6) AND TIMESTAMPDIFF(SECOND ,process_date,NOW()) &lt; 1296000 ))
+		</if>
+	</select>
+	
+	<select id="findDiliveryHelpList" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select
+		id,email,title,url,org_flag as orgFlag,org_name as orgName ,process_type as processType,
+		procesor_name as procesorName,procesor_id as procesorId ,add_date as addDate,path,
+		product_id as productId ,TIMESTAMPDIFF(SECOND ,process_date,NOW()) AS time ,help_id AS helpId, 
+		help_member_id as helpMemberId 
+		from t_delivery where 1 = 1 and product_id = 2
+		<if test="processType == 1" > <!-- 待应助 -->
+			and process_type != 1 and process_type != 6 and process_type != 3 and process_type != 5 
+			and process_type != 4 
+		</if>
+		<if test="processType ==2"> <!-- 应助完成 -->
+			and (process_type = 1 or process_type = 6) <!-- and  help_id = 3  -->
+			<!-- AND TIMESTAMPDIFF(SECOND ,process_date,NOW()) &lt; 60*60*24*15 -->
+		</if>
+		<if test="val != null "> <!-- 查询 -->
+			<!-- and (email like #{val} or title like #{val}) 
+			AND ((process_type = 1 OR process_type = 6) 
+			AND TIMESTAMPDIFF(SECOND ,process_date,NOW()) &lt; 1296000 OR (process_type !=1 AND process_type != 6)) -->
+			and (email = #{email} or title like #{val}) 
+			AND (process_type = 0 OR process_type = 2 
+			OR ((process_type = 1 OR process_type = 6) AND TIMESTAMPDIFF(SECOND ,process_date,NOW()) &lt; 1296000 ))
+		</if>
+		order by add_date desc
+		limit #{offset},#{size}
+	</select>
+	
+	<select id="checkHelp" parameterType="java.util.Map" resultType="java.util.Map">
+		select help_id as helpId,TIMESTAMPDIFF(SECOND ,process_date,NOW()) AS time FROM `t_delivery` where id = #{id} and 
+		process_date >= DATE_FORMAT(DATE_SUB(NOW(),INTERVAL '00:15:00' DAY_SECOND),'%Y-%m-%d %H:%i:%S')
+	</select>
+	<select id="checkHelpCount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT id,title FROM t_delivery WHERE help_member_id = #{memberId} AND 
+		process_date >= DATE_FORMAT(DATE_SUB(NOW(),INTERVAL '00:15:00' DAY_SECOND),'%Y-%m-%d %H:%i:%S')
+	</select>
+	
+	<update id="updateHelp" parameterType="java.util.Map">
+		update t_delivery set help_id = #{helpId},process_date = #{time},help_member_id = #{helpMemberId}  
+		<if test="path != null">
+			,path = #{path} 
+		</if>
+		<if test="processType != null">
+			,process_type = #{processType} 
+		</if>
+		<if test="procesorId != null">
+			,procesor_id = #{procesorId} 
+			,procesor_name = #{procesorName} 
+		</if>
+		where id = #{id}
+	</update>
+
+</mapper>    

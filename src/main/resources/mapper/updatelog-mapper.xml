@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.UpdateLogDaoI">
+
+	<insert id="insert" parameterType="UpdateLog" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		t_update_log(title,content,add_time,times,praise,is_show,abstract,releases,person,lable,type,path)
+		values(#{title},#{content},#{addTime},#{times},#{praise},#{isShow},#{logAbstract},#{releases},#{person},#{lable},#{type},#{path})
+	</insert>
+
+	<update id="update" parameterType="UpdateLog">
+		update
+		t_update_log
+		set
+		title=#{title},content=#{content},abstract=#{logAbstract},releases=#{releases},
+		person=#{person},lable=#{lable},type=#{type},path=#{path}
+		where
+		id=#{id}
+	</update>
+
+	<update id="updateView" parameterType="UpdateLog">
+		update
+		t_update_log
+		set
+		is_show = #{isShow}
+		where
+		id=#{id}
+	</update>
+
+	<update id="increTimes" parameterType="integer">
+		update
+		t_update_log
+		set
+		times=times+1
+		where
+		id=#{id}
+	</update>
+
+	<update id="increPraise" parameterType="integer">
+		update
+		t_update_log
+		set
+		praise=praise+1
+		where
+		id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="integer">
+		delete from
+		t_update_log
+		where
+		id=#{id}
+	</delete>
+	<!-- 查询所有日志数量 -->
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(id) from t_update_log
+		where type = #{type}
+		<if test="key != null">
+			and (title like #{key} or abstract like #{key} or person
+			like #{key} or lable like #{key})
+		</if>
+	</select>
+	<!-- 查询所有日志 -->
+	<select id="findPager" resultType="UpdateLog" parameterType="java.util.Map">
+		select id,title,content,times,add_time as addTime,praise,is_show as
+		isShow,
+		abstract as logAbstract,releases,person,lable,path
+		from
+		t_update_log where type = #{type}
+		<if test="key != null">
+			and (title like #{key} or abstract like #{key} or person
+			like #{key} or lable like #{key})
+		</if>
+		order by add_time desc
+		limit #{offset},#{size}
+	</select>
+
+	<select id="get" resultType="UpdateLog" parameterType="int">
+		select
+		id,title,content,times,add_time as addTime,praise,is_show as isShow,
+		abstract as logAbstract,releases,person,lable,path,type
+		from
+		t_update_log
+		where id=#{id}
+	</select>
+
+	<select id="prev" resultType="UpdateLog" parameterType="int">
+		select
+		id,title,content,times,add_time as addTime,praise,is_show as isShow
+		from t_update_log where id &lt; #{id} and is_show =1 order by id desc
+		limit 1
+	</select>
+
+	<select id="next" resultType="UpdateLog" parameterType="int">
+		select
+		id,title,content,times,add_time as addTime,praise,is_show as isShow
+		from t_update_log where id &gt; #{id} and is_show =1 order by id desc
+		limit 1
+	</select>
+
+	<!-- 查询后台lable标签 -->
+	<select id="getLable" resultType="java.util.Map">
+		select
+		name,type from
+		t_update_log_lable
+	</select>
+
+	<insert id="insertLable" parameterType="ArrayList">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert IGNORE t_update_log_lable(name,type)
+		<foreach collection="list" item="item" index="index"
+			separator="union all">
+			select #{item.name,jdbcType=VARCHAR},
+			#{item.type,jdbcType=INTEGER} from dual
+		</foreach>
+	</insert>
+</mapper>    

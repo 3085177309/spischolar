@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.SiteDaoI">
+
+	<!-- 通过机构id删除站点 -->
+	<delete id="deleteByOrg">
+		delete from t_site where org_id=#{orgId}
+	</delete>
+
+	<!-- 查找机构下所有站点 -->
+	<select id="findOrgSites" resultType="Site">
+		select
+		id,flag,name,template,org_id as orgId,create_date as
+		createDate,org_flag as orgFlag
+		from
+		t_site
+		where
+		org_id=#{id}
+	</select>
+
+	<!-- 查找机构下的站点标识是否存在 -->
+	<select id="findOrgFlagExists" parameterType="java.util.Map"
+		resultType="integer">
+		select
+		1
+		from
+		t_site
+		where
+		org_id=#{orgId} and flag=#{flag}
+	</select>
+
+	<!-- 保存站点信息 -->
+	<insert id="insert" parameterType="Site" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		t_site(flag,name,template,org_id,create_date,org_flag)
+		values(#{flag},#{name},#{template},#{orgId},#{createDate},#{orgFlag})
+	</insert>
+
+	<!-- 通过id查找站点信息 -->
+	<select id="findById" resultType="Site">
+		select
+		id,flag,name,template,org_id as orgId,create_date as
+		createDate,org_flag as orgFlag
+		from
+		t_site
+		where
+		id=#{id}
+	</select>
+
+	<!-- 删除站点 -->
+	<delete id="del">
+		delete from t_site where id=#{id}
+	</delete>
+
+	<!-- 更新站点模版目录 -->
+	<update id="updateSiteTemplate" parameterType="java.util.Map">
+		update
+		t_site
+		set
+		template=#{template}
+		where
+		id=#{id}
+	</update>
+</mapper>    

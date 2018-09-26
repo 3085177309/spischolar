@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.ProductDaoI">
+
+	<select id="findByOrg" parameterType="string" resultType="Product">
+		select
+		id,org_id as orgId,org_flag as orgFlag,pdt_name as productName,
+		pdt_id
+		as productId,start_date as startDate,end_date as endDate
+		,status,org_name as orgName , single
+		from
+		t_product
+		where
+		org_flag=#{orgFlag}
+		order
+		by pdt_id
+	</select>
+
+	<insert id="insert" parameterType="Product">
+		insert into
+		t_product(org_id,org_flag,pdt_name,pdt_id,start_date,end_date,status,org_name,single)
+		values(#{orgId},#{orgFlag},#{productName},#{productId},#{startDate},#{endDate},#{status},#{orgName},#{single})
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into
+		t_product(org_id,org_flag,pdt_name,pdt_id,start_date,end_date,status,org_name,single)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.orgId},#{item.orgFlag},#{item.productName},#{item.productId},#{item.startDate},#{item.endDate},#{item.status},#{item.orgName},#{item.single})
+		</foreach>
+	</insert>
+
+	<delete id="delete" parameterType="integer">
+		delete from t_product where
+		id=#{id}
+	</delete>
+
+	<update id="edit" parameterType="Product">
+		update t_product set
+		org_id=#{orgId}
+		,org_flag=#{orgFlag},pdt_name=#{productName},
+		pdt_id=#{productId},start_date=#{startDate},end_date=#{endDate},status=#{status},org_name=#{orgName},single=#{single}
+		where id=#{id}
+	</update>
+
+	<delete id="deleteByOrg" parameterType="integer">
+		delete from t_product
+		where org_id=#{orgId}
+	</delete>
+
+	<select id="findCount" resultType="int" parameterType="java.util.Map">
+		select count(id) from t_product
+		<where>
+			1=1
+			<if test="orgId != null">
+				and org_id=#{orgId}
+			</if>
+			<if test="status!=null">
+				and status=#{status}
+			</if>
+			<if test="productId != null">
+				and pdt_id = #{productId}
+			</if>
+			<if test="orgName!=null">
+				and org_name like "%"#{orgName}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="findPager" resultType="Product" parameterType="java.util.Map">
+		select
+		id,org_id as orgId,org_flag as orgFlag,pdt_name as productName,
+		pdt_id as productId,start_date as startDate,end_date as endDate
+		,status,org_name as orgName, single
+		from
+		t_product
+		<where>
+			1=1
+			<if test="orgId != null">
+				and org_id=#{orgId}
+			</if>
+			<if test="status!= null">
+				and status=#{status}
+			</if>
+			<if test="productId != null">
+				and pdt_id = #{productId}
+			</if>
+			<if test="orgName != null">
+				and org_name like "%"#{orgName}"%"
+			</if>
+			<if test="endDate != null">
+				and end_date &lt; now()
+			</if>
+		</where>
+		<if test="offset!=null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="findCurrentByOrg" parameterType="string" resultType="Product">
+		select
+		id,org_id as orgId,org_flag as orgFlag,pdt_name as productName,
+		pdt_id as productId,start_date as startDate,end_date as endDate
+		,status,org_name as orgName, single
+		from
+		t_product
+		where
+		org_flag=#{orgFlag} and
+		CURDATE() BETWEEN start_date and end_date and status!=0
+	</select>
+
+</mapper>    

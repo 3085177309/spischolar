@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.DisciplineSystemDaoI">
+
+	<select id="findLast" resultType="DisciplineSystem">
+		select t1.authority_database as
+		authorityDatabase,t1.year,t1.discipline,t1.name
+		from
+		t_discipline_system t1, (select
+		authority_database, MAX(year) as year
+		from
+		t_discipline_system group by authority_database) t2
+		where
+		t2.authority_database=t1.authority_database and t2.year=t1.year
+		and
+		t1.discipline is not null
+		group by
+		t1.authority_database,t1.year,t1.discipline,t1.name
+	</select>
+
+	<!-- 查找权威数据库的所有收录年 -->
+	<select id="findAllYear" resultType="DisciplineSystem">
+		select authority_database as
+		authorityDatabase,year,range_year as rangeYear from
+		t_discipline_system group by authority_database,year,range_year
+	</select>
+
+	<select id="findByYear" resultType="DisciplineSystem">
+		select authority_database as
+		authorityDatabase,discipline,year,range_year as rangeYear ,name
+		from
+		t_discipline_system
+		where
+		authority_database=#{authoDB} and
+		year=#{year}
+		order by convert(discipline USING gbk) COLLATE
+		gbk_chinese_ci asc
+	</select>
+
+	<!-- 查出所有的subjectName -->
+	<select id="findAllSubjectName" resultType="JournalSystemSubject">
+		select
+		id,subject_name as name from t_discipline_system_subject
+	</select>
+
+</mapper>    

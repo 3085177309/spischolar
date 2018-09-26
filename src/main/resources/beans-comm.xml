@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     	 http://www.springframework.org/schema/aop 
+     	 http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     	 http://www.springframework.org/schema/mvc      
+         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+     	 http://cxf.apache.org/jaxws   
+    	 http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<context:annotation-config />
+	<aop:aspectj-autoproxy />
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<context:component-scan base-package="com.wd">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean id='SpringContextUtil' class='com.wd.util.SpringContextUtil' />
+
+	<bean id="searchServiceContext" class="com.wd.front.context.SearchServiceContext">
+		<property name="searchServiceContext">
+			<map>
+				<entry key="journal_search" value-ref="journalSearchService" />
+				<entry key="journal_detail" value-ref="journalDetailSearchService" />
+				<entry key="subject_system_search" value-ref="subjectSystemSearch" />
+				<entry key="subject_search" value-ref="subjectSearch" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cacheModule" class="com.wd.front.module.cache.impl.CacheModuleImpl"
+		init-method="initCache">
+		<property name="orgDao" ref="orgDao" />
+		<property name="disciplineSystemDao" ref="disciplineSystemDao" />
+		<property name="authorityDatabaseDao" ref="authorityDatabaseDao" />
+		<property name="disciplineDao" ref="disciplineDao" />
+		<property name="sortFieldDao" ref="sortFieldDao" />
+		<property name="sysDao" ref="sysDao" />
+		<property name="personDao" ref="personDao" />
+	</bean>
+	<bean id="queryStrategyContext" class="com.wd.front.context.QueryStrategyContext">
+		<property name="strategyContext">
+			<map>
+				<entry key="lan;docLan" value-ref="docLanQuery" />
+				<entry key="docType" value-ref="docTypeQuery" />
+				<entry key="docTitle;title" value-ref="titleFieldQuery" />
+				<entry key="issn" value-ref="issnQuery" />
+				<entry key="disciplineName" value-ref="disciplineNameQuery" />
+				<entry key="all" value-ref="allFieldQuery" />
+				<entry key="detailYear" value-ref="detailYearQuery" />
+				<entry key="isNew" value-ref="isNewQuery" />
+				<entry key="id" value-ref="idQuery" />
+				<entry key="disciplineSystemDiscipline" value-ref="disciplineSystemDisciplineQuery" />
+				<entry key="relatedDocTitle" value-ref="relatedTitleQuery" />
+				<entry key="authorityDatabase" value-ref="authorityDBQuery" />
+				<entry key="shouLuSubjects" value-ref="shouLuSubjectQuery" />
+				<entry key="firstLetter" value-ref="firstLetterQuery" />
+				<entry key="oa" value-ref="oaQuery" />
+				<entry key="partition" value-ref="partitionQuery" />
+				<!-- 学科体系中的权威数据库 -->
+				<entry key="scDB" value-ref="scDbQuery" />
+				<!-- 学科体系中的收录年 -->
+				<entry key="scYear" value-ref="scYearQuery" />
+				<entry key="scDis" value-ref="scDisciplineQuery" />
+				<!-- 学科体系中的学科：理学，工学 -->
+				<entry key="scSName" value-ref="scSNameQuery" />
+
+				<!-- hot_journal类型中的字段 -->
+				<entry key="hotDB" value-ref="hotAuthorityDBQuery" />
+				<entry key="hotYear" value-ref="hotYearQuery" />
+				<entry key="hotDiscipline" value-ref="hotDisciplineQuery" />
+				<entry key="orgFlag" value-ref="orgFlagQuery" />
+			</map>
+		</property>
+	</bean>
+	<bean id="filterStrategyContext" class="com.wd.front.context.FilterStrategyContext">
+		<property name="filterBuilderContext">
+			<map>
+				<entry key="auDB" value-ref="authorityDbFilter" />
+				<entry key="norms" value-ref="normsFilter" />
+				<entry key="oa" value-ref="oaFilter" />
+				<entry key="impact" value-ref="impactFromFilter" />
+				<entry key="impactTo" value-ref="impactToFilter" />
+			</map>
+		</property>
+	</bean>
+	<bean id="facetBuilderStrategyContext" class="com.wd.front.context.FacetBuilderStrategyContext">
+		<property name="facetBuilderContext">
+			<map>
+				<entry key="lastSubjectPartEval" value-ref="lastSubjectPartEval" />
+				<entry key="dbYearDiscipline" value-ref="commFacet" />
+			</map>
+		</property>
+	</bean>
+
+	<!--拦截器配置 -->
+	<mvc:interceptors>
+		<bean class="com.wd.front.interceptor.LogInterceptor"></bean>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/backend/**" />
+			<mvc:exclude-mapping path="/upload/**" />
+			<mvc:exclude-mapping path="/resources/**" />
+			<mvc:exclude-mapping path="/user/historyForSearch" />
+			<mvc:exclude-mapping path="/record/**" />
+			<bean class="com.wd.front.interceptor.LogInterceptor"></bean>
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:mapping path="/backend/login" />
+			<mvc:mapping path="/backend/logout" />
+			<mvc:exclude-mapping path="/record/**" />
+			<bean class="com.wd.front.interceptor.MobileInterceptor"></bean>
+		</mvc:interceptor>
+
+
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/user/login" />
+			<mvc:exclude-mapping path="/user/register" />
+			<mvc:exclude-mapping path="/user/department/**" />
+			<mvc:exclude-mapping path="/user/findPwd" />
+			<mvc:exclude-mapping path="/user/checkLink" />
+			<mvc:exclude-mapping path="/user/resetPwdUL" />
+			<mvc:exclude-mapping path="/user/findPwdUser" />
+			<mvc:exclude-mapping path="/user/checkEmail" />
+			<mvc:exclude-mapping path="/user/checkUsername" />
+			<mvc:exclude-mapping path="/user/historyForSearch" />
+			<mvc:exclude-mapping path="/download/delivery" />
+			<mvc:exclude-mapping path="/backend/**" />
+			<mvc:exclude-mapping path="/translate/**" />
+			<mvc:exclude-mapping path="/upload/**" />
+			<mvc:exclude-mapping path="/resources/**" />
+			<mvc:exclude-mapping path="/record/**" />
+			<mvc:exclude-mapping path="/getLinkUrl/**" />
+			<bean class="com.wd.front.interceptor.LoginInterceptor"></bean>
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/user/login" />
+			<mvc:exclude-mapping path="/user/register" />
+			<mvc:exclude-mapping path="/user/department/**" />
+			<mvc:exclude-mapping path="/user/findPwd" />
+			<mvc:exclude-mapping path="/user/checkLink" />
+			<mvc:exclude-mapping path="/user/resetPwdUL" />
+			<mvc:exclude-mapping path="/user/findPwdUser" />
+			<mvc:exclude-mapping path="/user/checkEmail" />
+			<mvc:exclude-mapping path="/user/checkUsername" />
+			<mvc:exclude-mapping path="/journal/subjectJSON" />
+			<mvc:exclude-mapping path="/journal/image" />
+			<mvc:exclude-mapping path="/user/historyForSearch" />
+			<mvc:exclude-mapping path="/backend/**" />
+			<mvc:exclude-mapping path="/upload/**" />
+			<mvc:exclude-mapping path="/resources/**" />
+			<mvc:exclude-mapping path="/record/**" />
+			<mvc:exclude-mapping path="/translate/**" />
+			<mvc:exclude-mapping path="/getLinkUrl/**" />
+			<bean class="com.wd.front.interceptor.BrowseInfoInterceptor"></bean>
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/user/login" />
+			<mvc:exclude-mapping path="/user/register" />
+			<mvc:exclude-mapping path="/user/department/**" />
+			<mvc:exclude-mapping path="/user/findPwd" />
+			<mvc:exclude-mapping path="/user/checkLink" />
+			<mvc:exclude-mapping path="/user/resetPwdUL" />
+			<mvc:exclude-mapping path="/user/findPwdUser" />
+			<mvc:exclude-mapping path="/user/checkEmail" />
+			<mvc:exclude-mapping path="/user/checkUsername" />
+			<mvc:exclude-mapping path="/user/feedbacks" />
+			<mvc:exclude-mapping path="/user/historyForSearch" />
+			<mvc:exclude-mapping path="/user/logout" />
+			<mvc:exclude-mapping path="/backend/**" />
+			<mvc:exclude-mapping path="/upload/**" />
+			<mvc:exclude-mapping path="/resources/**" />
+			<mvc:exclude-mapping path="/download/delivery" />
+			<mvc:exclude-mapping path="/record/**" />
+			<mvc:exclude-mapping path="/translate/**" />
+			<mvc:exclude-mapping path="/getLinkUrl/**" />
+			<bean class="com.wd.front.interceptor.ProductInterceptor"></bean>
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/backend/**" />
+			<mvc:exclude-mapping path="/backend/login" />
+			<mvc:exclude-mapping path="/backend/logout" />
+			<mvc:exclude-mapping path="/backend/img" />
+			<mvc:exclude-mapping path="/backend/member/list/findPwd" />
+			<mvc:exclude-mapping path="/backend/user" />
+			<mvc:exclude-mapping path="/translate/**" />
+			<bean class="com.wd.front.interceptor.BackLoginInterceptor"></bean>
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/user/profile" />
+			<mvc:mapping path="/user/security" />
+			<mvc:mapping path="/user/applyLogin" />
+			<mvc:exclude-mapping path="/user/historyForSearch" />
+			<mvc:exclude-mapping path="/translate/**" />
+			<bean class="com.wd.front.interceptor.SpischolarInterceptor"></bean>
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/translate/**" />
+			<bean class="com.wd.front.interceptor.TranslateInterceptor"></bean>
+		</mvc:interceptor>
+
+	</mvc:interceptors>
+
+	<bean id="clientFactory" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+		<property name="serviceClass" value="com.wd.service.SearchForWebServiceI" />
+		<property name="address" value="${wsAddress}" />
+	</bean>
+	<bean id="searchConnect" class="com.wd.service.SearchForWebServiceI"
+		factory-bean="clientFactory" factory-method="create" />
+	<!-- 韩国云主机谷歌接口地址 -->
+	<bean id="clientFactoryOB" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+		<property name="serviceClass" value="com.wd.service.SearchForWebServiceOBI" />
+		<property name="address" value="${wsAddressOB}" />
+	</bean>
+	<bean id="searchConnectOB" class="com.wd.service.SearchForWebServiceOBI"
+		factory-bean="clientFactoryOB" factory-method="create" />
+
+
+	<!-- 任务调度工厂 ，用于管理触发器 -->
+	<bean id="pollingFaction"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+		destroy-method="destroy">
+		<property name="triggers">
+			<!-- 当有多个触发器是填写在这里 -->
+			<list>
+				<ref local="quartzReloadCacheTrigger" />
+<!-- 				<ref local="quartzEsClientLiveTrigger" /> -->
+			 	<ref local="quartzAddCordTrigger" />  
+			</list>
+		</property>
+	</bean>
+
+	<!-- 触发器 -->
+	<bean id="quartzReloadCacheTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="quartzReloadCacheBean" />
+		<!-- 每23小时59分钟触发一次 -->
+		<property name="cronExpression" value="0 59 0/23 * * ?" />
+	</bean>
+	<!-- <bean id="quartzEsClientLiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="quartzEsClientLiveBean" />
+		每5分钟触发一次
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean> -->
+	<bean id="quartzAddCordTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="quartzAddCordLiveBean" />
+		<!-- 每23小时59分钟触发一次 -->
+		<property name="cronExpression" value="0 01 0 * * ?" />
+	</bean>
+
+	<!-- 任务类 -->
+	<!-- 缓存重加载任务 -->
+	<bean id="quartzReloadCacheBean"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="reloadCacheTask" />
+		<property name="targetMethod" value="execute" />
+	</bean>
+	<!-- es的client存活任务 -->
+	<!-- <bean id="quartzEsClientLiveBean"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="esClientLiveTask" />
+		<property name="targetMethod" value="execute" />
+	</bean> -->
+	<!-- 自动添加数据任务 -->
+	<bean id="quartzAddCordLiveBean"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="browseAddTask" />
+		<property name="targetMethod" value="execute" />
+	</bean>
+
+	<bean id="wsSearchServiceImpl" class="com.wd.service.impl.WSSearchServiceImpl"></bean>
+
+	<jaxws:server id="wsSearchService" serviceClass="com.wd.service.WSSearchService"
+		address="/wsSearch">
+		<jaxws:serviceBean>
+			<ref bean="wsSearchServiceImpl" />
+		</jaxws:serviceBean>
+	</jaxws:server>
+
+	<bean id="mailService" class="com.wd.backend.service.impl.MailServiceImpl">
+		<property name="user" value="${mail_user}"></property>
+		<property name="pwd" value="${mail_pwd}"></property>
+		<property name="host" value="${mail_server_host}"></property>
+		<property name="user2" value="${mail_user_crs}"></property>
+		<property name="pwd2" value="${mail_pwd_crs}"></property>
+		<property name="host2" value="${mail_server_host_crs}"></property>
+	</bean>
+
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="4096" />
+	</bean>
+</beans>
+

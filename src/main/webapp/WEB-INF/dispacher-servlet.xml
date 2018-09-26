@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.wd">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<mvc:resources location="/sites/,/resources/" mapping="/resources/**" />
+	<mvc:resources location="/upload/" mapping="/upload/**" />
+	<mvc:resources location="/translate/" mapping="/translate/**" />
+
+	<bean id="velocityConfig"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<!-- Velocity模版文件存放路径(spring mvc会在该路径下寻找) -->
+		<property name="resourceLoaderPath" value="/WEB-INF/vm" />
+		<!-- Velocity配置文件 -->
+		<property name="configLocation" value="classpath:velocity.properties" />
+	</bean>
+
+	<bean id="viewResolver" class="com.wd.util.MultiViewResover">
+		<property name="resolvers">
+			<map>
+				<entry key="jsp">
+					<bean
+						class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+						<property name="viewClass"
+							value="org.springframework.web.servlet.view.JstlView" />
+						<property name="prefix" value="/" />
+						<property name="suffix" value=".jsp" />
+					</bean>
+				</entry>
+				<entry key="ftl">
+					<bean
+						class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+						<property name="cache" value="true" />
+						<property name="prefix" value="/" />
+						<property name="suffix" value=".ftl" />
+					</bean>
+				</entry>
+				<entry key="vm">
+					<bean
+						class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+						<property name="cache" value="true" />
+						<property name="prefix" value="/" />
+						<property name="suffix" value=".vm" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="10485760000" />
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+</beans>

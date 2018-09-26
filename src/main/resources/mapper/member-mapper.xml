@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.MemberDaoI">
+
+	<select id="getCount" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+		SUM(IF((Email = 'Tourist'),1,0)) AS touristCount,
+		SUM(IF((Email != 'Tourist'),1,0)) AS regrestCount,
+		SUM(login_count) AS loginCount,
+		SUM(login_count_add) AS loginCountAdd 
+		FROM
+		t_member WHERE 1=1
+		<if test="schoolFlag != null">
+			and school_flag = #{schoolFlag}
+		</if>
+		<if test="type != -1">
+			and type = #{type}
+		</if>
+		ORDER BY regrestCount DESC
+	</select>
+
+	<select id="getByAccessToken" resultType="Member" parameterType="java.lang.String">
+		select id,email,nickname,username,pwd,school,school_flag as
+		schoolFlag,department,identity,
+		education,sex,qq,phone,intro,avatar_small as
+		avatarSmall,avatar,register_time as registerTime,
+		login_time as
+		loginTime,last_login_ip as loginIP,login_type as
+		loginType,access_token as accessToken,
+		student_id as studentId,
+		entrance_time as entranceTime, department_flag as
+		departmentFlag ,
+		register_ip as registerIp , login_count as loginCount ,userType
+		from
+		t_member where access_token = #{access_token}
+	</select>
+
+	<select id="getById" resultType="Member" parameterType="integer">
+		select
+		id,email,nickname,username,pwd,school,school_flag as
+		schoolFlag,department,identity,
+		education,sex,qq,phone,intro,avatar_small as
+		avatarSmall,avatar,register_time as registerTime,
+		login_time as
+		loginTime,last_login_ip as loginIP,login_type as loginType, isOnline,
+		student_id as studentId, entrance_time as entranceTime, permission,
+		register_ip as registerIp , login_count as loginCount, forbidden
+		,userType,identification,show_qunwpa as showQunwpa
+		from t_member where id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="Member" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		t_member(email,nickname,username,pwd,school,school_flag,department,identity,
+		education,sex,qq,phone,intro,avatar_small
+		,avatar,register_time,login_time,last_login_ip,
+		login_type,access_token,student_id,entrance_time,register_ip,userType,permission,
+		identification,lifespan,apply_time,is_message,type)
+		values(#{email},#{nickname},#{username},#{pwd},#{school},#{schoolFlag},#{department},#{identity},
+		#{education},#{sex},#{qq},#{phone},#{intro},#{avatarSmall},#{avatar},#{registerTime},
+		#{loginTime},#{loginIP},#{loginType},#{accessToken},#{studentId},#{entranceTime},#{registerIp},
+		#{userType},#{permission},#{identification},#{lifespan},#{applyTime},1,#{type}
+		)
+	</insert>
+
+	<update id="update" parameterType="Member">
+		update
+		t_member
+		set
+		email=#{email},nickname=#{nickname},username=#{username},pwd=#{pwd},school=#{school},school_flag=#{schoolFlag},department=#{department},identity=#{identity},
+		education=#{education},sex=#{sex},qq=#{qq},phone=#{phone},intro=#{intro},avatar_small=#{avatarSmall},avatar=#{avatar},register_time=#{registerTime},
+		login_time=#{loginTime},last_login_ip=#{loginIP},access_token=#{accessToken},isOnline=#{isOnline},student_id=#{studentId},
+		entrance_time=#{entranceTime}, show_qunwpa=#{showQunwpa}
+		<if test="checkEmail != null">
+		,check_email=#{checkEmail} 
+		</if>
+		where
+		id=#{id}
+	</update>
+	<!-- 登录状态修改 -->
+	<update id="updateLogin" parameterType="java.util.Map">
+		update
+		t_member
+		set
+		isOnline=#{isOnline} , last_login_ip=#{loginIP} , login_count_add =
+		#{loginCountAdd} ,
+		login_time=#{loginTime}
+		where
+		id=#{id}
+	</update>
+
+	<!--更新文献互助群显示状态-->
+	<update id="updateShowQunwpa" parameterType="integer">
+		update
+		t_member
+		set
+		show_qunwpa=0
+		where
+		id=#{id}
+	</update>
+
+	<!-- 密码修改 -->
+	<update id="updatePwd" parameterType="java.util.Map">
+		update
+		t_member
+		set
+		pwd=#{pwd}
+		where
+		id=#{id}
+	</update>
+	<!-- 头像修改 -->
+	<update id="updateAvatar" parameterType="java.util.Map">
+		update
+		t_member
+		set
+		avatar_small=#{avatarSmall},avatar=#{avatar}
+		where
+		id = #{id}
+	</update>
+
+	<update id="resetProfile" parameterType="Member">
+		update
+		t_member
+		set
+		<if test="pwd != null">pwd=#{pwd},</if>
+		school=#{school},school_flag=#{schoolFlag},department=#{department},department_id=#{departmentId},identity=#{identity},education=#{education},
+		sex=#{sex},qq=#{qq},phone=#{phone},intro=#{intro},nickname=#{nickname},
+		student_id=#{studentId}, entrance_time=#{entranceTime}
+		,userType=#{userType} ,permission=#{permission}
+		where
+		id=#{id}
+	</update>
+
+	<update id="applyLogin" parameterType="Member">
+		update
+		t_member
+		set
+		permission=#{permission},identification=#{identification}
+		,lifespan=#{lifespan}
+		<if test="applyTime != null">,apply_time=#{applyTime}</if>
+		,handle_time=#{handleTime},handle_people=#{handlePeople}
+		where
+		id=#{id}
+	</update>
+
+	<update id="forbidden" parameterType="Member">
+		update
+		t_member
+		set
+		forbidden=#{forbidden}
+		where
+		id=#{id}
+	</update>
+
+	<select id="login" resultType="Member" parameterType="java.util.Map">
+		select
+		id,email,nickname,username,pwd,school,school_flag as
+		schoolFlag,department,identity,
+		education,sex,qq,phone,intro,avatar_small as
+		avatarSmall,avatar,register_time as registerTime,
+		login_time as
+		loginTime,last_login_ip as loginIP,permission,isOnline,
+		student_id as
+		studentId, entrance_time as entranceTime , register_ip as registerIp ,
+		login_count as loginCount ,forbidden ,userType,show_qunwpa as showQunwpa
+		from t_member
+		where
+		(username=#{username} or email=#{username}) and pwd=#{pwd}
+		limit 0,1
+	</select>
+
+	<select id="getMemberSchool" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT
+		SUM(IF((Email = 'Tourist'),1,0)) AS touristCount,
+		SUM(IF((Email
+		!= 'Tourist'),1,0)) AS regrestCount,
+		SUM(IF((userType = 1),1,0)) AS
+		userTypeCount,
+		SUM(IF((permission =1 OR permission = 3 OR permission =
+		4),1,0)) AS permissionCount,
+		SUM(IF((isOnline = 1),1,0)) AS
+		isOnlineCount,
+		school_flag AS flag,school
+		FROM t_member WHERE
+		school_flag !='' GROUP BY school_flag, school ORDER BY
+		regrestCount DESC
+		<if test="offset !=null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="getMemberSchoolCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT COUNT(*) FROM (
+		SELECT
+		SUM(IF((Email =
+		'Tourist'),1,0)) AS touristCount,
+		SUM(IF((Email != 'Tourist'),1,0)) AS
+		regrestCount,
+		SUM(IF((userType = 1),1,0)) AS userTypeCount,
+		SUM(IF((permission =1 OR permission = 3 OR permission = 4),1,0)) AS
+		permissionCount,
+		SUM(IF((isOnline = 1),1,0)) AS isOnlineCount,
+		school_flag AS flag,school
+		FROM t_member WHERE school_flag !='' GROUP
+		BY school_flag, school
+		) as t
+	</select>
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(id) from t_member where email != 'Tourist'
+		<if test="schoolFlag != null">
+			and school_flag = #{schoolFlag}
+		</if>
+		<if test="department != null">
+			and department = #{department}
+		</if>
+		<if test="key != null">
+			and (email like #{key} or username like #{key}
+			<if test='key == "%userType1%"'>
+				or userType = 1
+			</if>
+			<if test='key == "%userType0%"'>
+				or userType = 0
+			</if>
+			)
+		</if>
+	</select>
+
+	<select id="findList" resultType="Member" parameterType="java.util.Map">
+		select id,email,nickname,username,pwd,school,school_flag as
+		schoolFlag,department,identity,
+		education,sex,qq,phone,intro,avatar_small as
+		avatarSmall,avatar,register_time as registerTime,
+		login_time as
+		loginTime,last_login_ip as loginIP , register_ip as registerIp ,
+		permission ,
+		login_count as loginCount , isOnline ,forbidden , userType
+		, identification
+		from t_member where email != 'Tourist'
+		<if test="schoolFlag != null">
+			and school_flag = #{schoolFlag}
+		</if>
+		<if test="department != null">
+			and department = #{department}
+		</if>
+		<if test="key != null">
+			and (email like #{key} or username like #{key}
+			<if test='key == "%userType1%"'>
+				or userType = 1
+			</if>
+			<if test='key == "%userType0%"'>
+				or userType = 0
+			</if>
+			)
+		</if>
+		<if test="order == 11">
+			order by register_time desc
+		</if>
+		<if test="order == 12">
+			order by register_time
+		</if>
+		<if test="order == 21">
+			order by login_count desc
+		</if>
+		<if test="order == 22">
+			order by login_count
+		</if>
+		<if test="order == 31">
+			order by isOnline desc
+		</if>
+		<if test="order == 32">
+			order by isOnline
+		</if>
+		limit #{offset},#{size}
+	</select>
+
+	<select id="findByUsername" resultType="Member" parameterType="java.lang.String">
+		select id,email,nickname,username,pwd,school,school_flag as
+		schoolFlag,department,identity,
+		education,sex,qq,phone,intro,avatar_small as
+		avatarSmall,avatar,register_time as registerTime,
+		login_time as
+		loginTime,last_login_ip as loginIP,secret_key as secretKey,out_date as
+		outDate,
+		student_id as studentId, entrance_time as entranceTime ,
+		register_ip as registerIp , login_count as loginCount ,forbidden,show_qunwpa as showQunwpa
+		from
+		t_member where username = #{username} or email = #{username}
+		limit 0,1
+	</select>
+
+	<select id="findByEmail" resultType="Member" parameterType="java.lang.String">
+		select school,school_flag as schoolFlag from t_member where
+		email=#{email}
+	</select>
+
+	<update id="updateSecret" parameterType="Member">
+		update
+		t_member
+		set
+		secret_key=#{secretKey},out_date=#{outDate}
+		where
+		id = #{id}
+	</update>
+
+	<select id="isEmailExists" resultType="integer" parameterType="java.lang.String">
+		select count(0) from t_member where email=#{email}
+	</select>
+
+	<select id="isUsernameExists" resultType="integer"
+		parameterType="java.lang.String">
+		select count(0) from t_member where username=#{username}
+	</select>
+	
+	<select id="getIeMessage" resultType="integer" parameterType="java.lang.Integer">
+		select is_message from t_member where id = #{id}
+	</select>
+
+	<update id="updateTourist" parameterType="java.util.Map">
+		update
+		t_member
+		set
+		login_time = #{loginTime} , last_login_ip=#{loginIP} , login_count =
+		#{loginCount} , is_message = 1 
+		where
+		id = #{id}
+	</update>
+
+	<delete id="deleteUser" parameterType="integer">
+		delete from t_member where
+		id= #{id}
+	</delete>
+
+	<!-- 学校验证接口 -->
+	<select id="schoolApiUrl" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select url from t_school_api where
+		school_flag=#{schoolFlag}
+	</select>
+
+	<!-- 校外申请 -->
+	<select id="findCountByApply" resultType="integer"
+		parameterType="java.util.Map">
+		select count(id) from t_member where email != 'Tourist' and permission
+		!= 0
+		<if test="permission != null">
+			and permission = #{permission}
+			<if test="permission == 1">
+				or permission = 3 or permission = 4
+			</if>
+		</if>
+		<if test="key != null">
+			and (email like #{key} or username like #{key} or nickname
+			like #{key} or school like #{key})
+		</if>
+	</select>
+
+	<select id="findListByApply" resultType="Member" parameterType="java.util.Map">
+		select id,email,nickname,username,pwd,school,school_flag as
+		schoolFlag,department,identity,
+		education,sex,qq,phone,intro,avatar_small as
+		avatarSmall,avatar,register_time as registerTime,
+		login_time as
+		loginTime,last_login_ip as loginIP , register_ip as registerIp ,
+		permission ,
+		login_count as loginCount , isOnline ,forbidden , userType
+		, identification
+		,apply_time as applyTime,
+		handle_time as handleTime,
+		handle_people as handlePeople
+		from t_member where email != 'Tourist'
+		and permission != 0
+		<if test="permission != null">
+			and permission = #{permission}
+			<if test="permission == 1">
+				or permission = 3 or permission = 4
+			</if>
+		</if>
+		<if test="key != null">
+			and (email like #{key} or username like #{key} or nickname
+			like #{key} or school like #{key})
+		</if>
+		order by apply_time desc limit #{offset},#{size}
+	</select>
+
+	<!-- 修改提示字段 -->
+	<update id="updatePermission" parameterType="integer">
+		update
+		t_member
+		set
+		permission = 1
+		where
+		id=#{id}
+	</update>
+
+	<!-- 随机找出一千个游客 -->
+	<select id="findTourist" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select id,register_ip as ip from t_member where 1=1
+		<if test="orgFlag != null">
+			and school_flag = #{orgFlag}
+		</if>
+		and email = 'Tourist'
+		and register_ip is not null LIMIT 0 ,1000
+	</select>
+	
+	<!-- 后台学校用户统计登陆次数     -->
+	<select id="findUserLoginCount" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT 
+		IFNULL(SUM(login_count),0) AS loginCount, 
+		IFNULL(SUM(login_count_add),0) AS loginCountAdd
+		FROM t_member WHERE 1=1 
+		<if test="orgFlag != null">
+			and school_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and login_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			and login_time &lt; #{endTime}
+		</if>
+		AND Email != 'Tourist' 
+	</select>
+	<!-- 后台学校用户统计游客数量  原始数据和添加数据 -->
+	<select id="findTouristCount" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT COUNT(*) AS count,type FROM t_member WHERE 1=1  
+		<if test="orgFlag != null">
+			and school_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and login_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			and login_time &lt; #{endTime}
+		</if>
+		and email = 'Tourist'
+		GROUP BY TYPE
+	</select>
+	
+	<select id="findUserIds" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT id,login_count as loginCount,login_count_add as loginCountAdd,isOnline,last_login_ip as loginIP,login_time as loginTime 
+		FROM t_member WHERE 1=1  
+		<if test="orgFlag != null">
+			and school_flag = #{orgFlag}
+		</if>
+		<if test="beginTime != null">
+			and login_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			and login_time &lt; #{endTime}
+		</if>
+		and email != 'Tourist'
+	</select>
+
+</mapper>    

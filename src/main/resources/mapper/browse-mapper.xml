@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.BrowseDaoI">
+	<!-- 数据记录 -->
+	<insert id="insertPageNum" parameterType="BrowseCount"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_browse(pageNum,member_id,last_time,begin_time,ip,school,type,referer_url,user_browser,win,time,referer_org
+		)
+		values( #{pageNum} , #{memberId} , #{lastTime},
+		#{beginTime},#{ip},#{school},#{type},#{refererUrl},#{userBrowser},#{win},(SELECT
+		TIMESTAMPDIFF (SECOND,#{beginTime},#{lastTime})),#{refOrg} )
+	</insert>
+
+	<!-- 数据记录 -->
+	<insert id="insertChickPage" parameterType="ChickPage"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_chickPage(url,page_name,browse_id,begin_time,last_time,time,previous_page
+		)
+		values( #{url} , #{pageName} , #{browseId} , #{beginTime} ,
+		#{lastTime} ,
+		(SELECT TIMESTAMPDIFF
+		(SECOND,#{beginTime},#{lastTime})),#{previousPage} )
+	</insert>
+
+	<!-- 根据时间查询访问概况（后台首页信息） -->
+	<select id="findVisit" resultType="VisiteInformation"
+		parameterType="java.util.Map">
+		SELECT * FROM
+		(SELECT SUM(pageNum ) AS pv
+		FROM t_browse WHERE 1 = 1
+		<if test="beginTime != null">
+			and last_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND last_time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		) AS t0
+		INNER JOIN (SELECT
+		<if test="i==5">
+			SUM(pageNum ) AS avgPage,SUM(TIME) AS avgTime
+		</if>
+		<if test="i!=5">
+			SUM(pageNum )/COUNT(1) AS avgPage,SUM(TIME)/COUNT(1) AS
+			avgTime
+		</if>
+		FROM t_browse WHERE 1 = 1 AND pageNum != 1 AND TIME !=0
+		<if test="beginTime != null">
+			and last_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND last_time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		) AS t1
+		INNER JOIN
+		(SELECT COUNT(1) AS ip FROM (SELECT ip,id FROM
+		t_browse WHERE 1 = 1
+		<if test="beginTime != null">
+			and last_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND last_time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		GROUP BY ip, id) AS t) AS t2
+		INNER JOIN
+		(SELECT COUNT(1) AS uv FROM (SELECT
+		member_id FROM t_browse WHERE 1 = 1
+		<if test="beginTime != null">
+			and last_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND last_time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		GROUP BY member_id) AS u) AS t3;
+	</select>
+
+	<!-- 总天数 -->
+	<select id="findDay" resultType="integer">
+		SELECT TIMESTAMPDIFF(DAY,
+		(SELECT last_time FROM `t_browse` ORDER BY last_time LIMIT 0,1),
+		(SELECT last_time FROM `t_browse` ORDER BY last_time DESC LIMIT 0,1)
+		)
+		AS TIME;
+	</select>
+
+	<!-- 流量查询:根据时间查询浏览信息t_browse -->
+	<select id="findBrowseList" resultType="BrowseCount"
+		parameterType="java.util.Map">
+		<if test="hight != null">
+			SELECT * FROM (
+		</if>
+		select id,pageNum,member_id as memberId,last_time as
+		lastTime,begin_time as beginTime,
+		ip,school,type,referer_url as
+		refererUrl,user_browser as userBrowser,win,time from t_browse where 1
+		= 1
+		and last_time > #{beginTime} and last_time &lt; #{endTime}
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		<if test="type != -1">
+			and type = #{type}
+		</if>
+		ORDER BY last_time
+		<if test="hight != null">
+			) AS t1 INNER JOIN (
+			SELECT COUNT(1) AS hight,browse_id
+			FROM t_chickPage WHERE last_time >
+			#{beginTime} and last_time &lt;
+			#{endTime} GROUP BY browse_id
+			) AS t2 ON id = browse_id
+		</if>
+	</select>
+
+	<!-- 根据时间查询ip数量 -->
+	<select id="findIpCount" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT COUNT(*) as count,LEFT(last_time,10) as time FROM t_browse
+		WHERE 1=1
+		<if test="beginTime != null">
+			and last_time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND last_time &lt; #{endTime}
+		</if>
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		GROUP BY LEFT(last_time,10)
+	</select>
+
+	<!-- 访问历史 ：分页查询浏览信息t_browse -->
+	<select id="findBrowseListByPage" resultType="BrowseCount"
+		parameterType="java.util.Map">
+		select t.id AS id,pageNum, memberId, lastTime,beginTime,
+		ip,t_org.name
+		AS school ,TYPE, refererUrl,userBrowser,win,TIME from (
+		<if test="val != null">
+			select * from ((
+		</if>
+		select id,pageNum,member_id as memberId,last_time as
+		lastTime,begin_time as beginTime,
+		ip, school ,type,referer_url as
+		refererUrl,user_browser as
+		userBrowser,win,time from t_browse where
+		type = 0
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		<if test="refererUrl != null">
+			and referer_url = #{refererUrl}
+		</if>
+		<if test="ip != null">
+			and ip = #{ip}
+		</if>
+		<if test="val != null">
+			)AS a inner join
+			(select browse_id from t_chickPage where url like
+			#{val} group by browse_id) AS b
+			on a.id = b.browse_id)
+		</if>
+		order by begin_time desc limit #{offset},#{size}
+		) as t ,t_org WHERE
+		t_org.flag = t.school ORDER BY beginTime DESC
+
+	</select>
+
+	<!-- 访问历史：根据browseID查询详细页面浏览信息 -->
+	<select id="findChickPageById" resultType="ChickPage"
+		parameterType="integer">
+		SELECT id, url,page_name as pageName,browse_id as
+		browseId,begin_time as beginTime,last_time as lastTime,time FROM
+		t_chickPage WHERE browse_id = #{browseId}
+	</select>
+
+	<!-- 访问历史 ：分页查询浏览信息t_browse -->
+	<select id="findBrowseCountByPage" resultType="integer"
+		parameterType="java.util.Map">
+		select count(1) from ((
+		select t_browse.id from t_browse ,t_org WHERE
+		TYPE = 0 AND t_org.flag = t_browse.school
+		<if test="school != null">
+			and school = #{school}
+		</if>
+		<if test="refererUrl != null">
+			and referer_url = #{refererUrl}
+		</if>
+		<if test="ip != null">
+			and ip = #{ip}
+		</if>
+		)AS a
+		<if test="val == null">
+			)
+		</if>
+		<if test="val != null">
+			inner join
+			(select browse_id from t_chickPage where url like #{val}
+			group by browse_id) AS b
+			on a.id = b.browse_id)
+		</if>
+	</select>
+
+	<!-- 获取所有的来源网站对应的来源网站名称 -->
+	<select id="findRefOrg" resultType="BrowseCount">
+		select referer_url as
+		refererUrl, referer_org as refOrg from t_ref_org
+	</select>
+
+	<!-- 查询访问报告。访问异常 -->
+	<select id="findVisitLog" resultType="VisitLog" parameterType="java.util.Map">
+		select name,url,info,collect_date as time, source, remark
+		<if test="name != null">
+			,(LENGTH(name)-LENGTH(#{val})) as rn
+		</if>
+		from t_exception where 1= 1
+		<if test="remark != null and  remark != '%其他%' ">
+			and remark like #{remark}
+		</if>
+		<if test="remark == '%其他%'">
+			and remark not like '%请求超时%'
+			and remark not like '%没有发布文章%'
+		</if>
+		<if test="name != null">
+			and name like #{name} order by rn
+		</if>
+		<if test="name == null">
+			order by time desc
+		</if>
+		limit #{offset},#{size}
+	</select>
+	<!-- 查询访问报告总数 -->
+	<select id="findVisitLogCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT count(1) FROM t_exception where 1=1
+		<if test="remark != null and  remark != '%其他%'">
+			and remark like #{remark}
+		</if>
+		<if test="remark == '%其他%'">
+			and remark not like '%请求超时%'
+			and remark not like '%没有发布文章%'
+		</if>
+		<if test="name != null">
+			and name like #{name}
+		</if>
+	</select>
+
+
+	<select id="findChickPage" resultType="ChickPage">
+		SELECT id,
+		url,page_name as
+		pageName,browse_id as browseId,begin_time as
+		beginTime,last_time as
+		lastTime,time,previous_page as previousPage
+		FROM t_chickPage WHERE
+		previous_page IS NOT NULL and browse_id = #{id}
+	</select>
+
+	<!-- 自动增加数据使用功能 -->
+	<select id="findBrowse" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT referer_url AS refererUrl,referer_org AS
+		refererOrg,user_browser AS userBrowser,win
+		FROM t_browse WHERE
+		referer_url is not null and school = #{orgFlag}
+		and referer_url NOT
+		LIKE '%spis%' GROUP BY referer_url, referer_org,user_browser,win
+		LIMIT #{offset} ,1
+	</select>
+
+</mapper>    

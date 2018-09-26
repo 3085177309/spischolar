@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.URLRuleDaoI">
+
+	<insert id="insert" parameterType="URLRule">
+		insert into
+		t_url_rule(name,gs_url,local_url,org_flag)
+		values(#{name},#{gsUrl},#{localUrl},#{orgFlag})
+	</insert>
+
+	<select id="findById" parameterType="integer">
+		select id,name,gs_url as
+		gsUrl,local_url as localUrl,org_flag as orgFlag
+		from
+		t_url_rule
+		where
+		id=#{id}
+	</select>
+
+	<delete id="delete" parameterType="integer">
+		delete from t_url_rule where
+		id=#{id}
+	</delete>
+
+	<update id="update" parameterType="URLRule">
+		update
+		t_url_rule
+		set
+		name=#{name},gs_url=#{gsUrl},local_url=#{localUrl},org_flag=#{orgFlag}
+		where id=#{id}
+	</update>
+
+	<select id="findPager" parameterType="java.util.Map" resultType="URLRule">
+		select
+		id,name,gs_url as gsUrl,local_url as localUrl,org_flag as
+		orgFlag
+		from
+		t_url_rule
+		where
+		org_flag=#{orgFlag}
+		limit
+		#{offset},#{size}
+	</select>
+
+	<select id="findCount" resultType="integer" parameterType="string">
+		select count(0) from t_url_rule where org_flag=#{orgFlag} or org_flag
+		is null
+	</select>
+
+	<select id="findByOrg" parameterType="string" resultType="URLRule">
+		select
+		id,name,gs_url as gsUrl,local_url as localUrl,org_flag as orgFlag
+		from
+		t_url_rule
+		where
+		org_flag=#{orgFlag} or org_flag is null
+		order by
+		org_flag desc;
+	</select>
+
+	<delete id="deleteByOrg" parameterType="string">
+		delete from t_url_rule
+		where org_flag=#{orgFlag}
+	</delete>
+</mapper>    

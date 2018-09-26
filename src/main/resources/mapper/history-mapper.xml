@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.HistoryDaoI">
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(id) from t_history where 1=1 and system_type = 1
+		<if test="memberId != null">
+			and member_id = #{memberId}
+		</if>
+		<!-- <if test="systemId != null"> and system_id = #{systemId} </if> -->
+	</select>
+
+	<select id="findList" resultType="History" parameterType="java.util.Map">
+		select id, keyword,url,time,batch_id as batchId,system_id as
+		systemId,system_type as systemType,member_id as memberId,org_flag as
+		orgFlag
+		from t_history where 1=1
+		<if test="memberId != null">
+			and member_id = #{memberId}
+		</if>
+		<if test="systemType != null">
+			and system_type = #{systemType}
+		</if>
+		<!-- <if test="systemId != null"> and system_id = #{systemId} </if> -->
+		order by time desc
+		<if test="offset != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="findListForSearch" resultType="History"
+		parameterType="java.util.Map">
+		select id, keyword,url,time,batch_id as batchId,system_id as
+		systemId,system_type as systemType,member_id as memberId,org_flag as
+		orgFlag
+		<if test="keyword != null">
+			,(LENGTH(keyword)-LENGTH(#{val})) AS rn
+		</if>
+		from t_history where system_type =1
+		<if test="memberId != null">
+			and member_id = #{memberId}
+		</if>
+		<if test="keyword != null">
+			and keyword like #{keyword}
+		</if>
+		<if test="systemType != 0">
+			and system_id = #{systemType}
+		</if>
+		GROUP BY keyword,id,url,time,batch_id,system_id,system_type,member_id,org_flag
+		<if test="keyword != null">
+			,LENGTH(keyword)-LENGTH(#{val}) order by rn
+		</if>
+		limit 0,10
+	</select>
+
+	<select id="findTopN" resultType="History" parameterType="java.util.Map">
+		select keyword,url,time,batch_id as batchId,system_id as
+		systemId,system_type as systemType,member_id as memberId,org_flag as
+		orgFlag
+		from t_history
+		where member_id = #{memberId}
+		<if test="systemId != 0">
+			and system_id = #{systemId}
+		</if>
+		and system_type = #{systemType}
+		order by time desc
+		limit 0 , #{size}
+	</select>
+
+	<insert id="insert" parameterType="History" useGeneratedKeys="true"
+		keyProperty="id">
+		replace into
+		t_history(keyword,url,time,batch_id,system_id,system_type,member_id,org_flag)
+		values(#{keyword},#{url},#{time},#{batchId},#{systemId},#{systemType},#{memberId},#{orgFlag})
+	</insert>
+	<!-- 内容分析 -->
+	<!-- <insert id="insertAnalysis" parameterType="History"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_content_analysis(keyword,url,time,batch_id,system_id,system_type,member_id,org_flag,db,method,type)
+		values(#{keyword},#{url},#{time},#{batchId},#{systemId},#{systemType},#{memberId},#{orgFlag},#{db},#{method},#{type})
+	</insert> -->
+	
+	<select id="findOne" resultType="History" parameterType="java.util.Map">
+		select keyword,url,time,batch_id,system_id,system_type,member_id as
+		memberId,org_flag as orgFlag
+		from t_history where 1=1
+		<if test="batchId != null">
+			and batch_id =#{batchId}
+		</if>
+		<if test="systemType != null">
+			and system_type=#{systemType}
+		</if>
+		<if test="keyword != null">
+			and keyword=#{keyword}
+		</if>
+		<if test="url != null">
+			and url =#{url}
+		</if>
+		<if test="member_id != null">
+			and memberId = #{memberId}
+		</if>
+		limit 0,1
+	</select>
+
+	<insert id="deleteHistory" parameterType="java.util.Map">
+		delete from t_history where 1 = 1
+		<if test="systemType == 0">
+			and member_id = #{memberId}
+		</if>
+		<if test="systemType == 1">
+			and id = #{id}
+		</if>
+	</insert>
+
+	<insert id="insertException" parameterType="ExceptionInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		replace into
+		t_exception(name,url,info,collect_date,source,remark)
+		values(#{name},#{url},#{info},#{collectDate},#{source},#{remark})
+	</insert>
+	
+</mapper>    

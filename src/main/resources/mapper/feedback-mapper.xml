@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.FeedbackDaoI">
+
+	<insert id="insert" parameterType="Feedback" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		t_feedback(system_name,contact,member_id,time,is_process)
+		values(#{systemName},#{contact},#{memberId},#{time},#{isProcess})
+	</insert>
+
+	<insert id="insertInfo" parameterType="FeedbackInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_feedback_info(feedback_id,content,options,type,time)
+		values(#{feedbackId},#{content},#{options},#{type},#{time})
+	</insert>
+
+	<update id="updateTime" parameterType="java.util.Map">
+		update t_feedback set time
+		= #{time},is_process = #{isProcess} where id = #{id}
+	</update>
+
+	<select id="findList" resultType="Feedback" parameterType="java.util.Map">
+		select id,system_name as systemName,contact,member_id as
+		memberId,time, is_process as isProcess
+		from t_feedback where 1=1
+		<if test="memberId !=null ">
+			and member_id=#{memberId}
+		</if>
+		<if test="isProcess !=null">
+			and is_process = #{isProcess}
+		</if>
+		order by time desc
+		<if test="offset !=null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="findListInfo" resultType="FeedbackInfo"
+		parameterType="integer">
+		SELECT id,feedback_id as
+		feedbackId,content,options,type,time from t_feedback_info where
+		feedback_id = #{id}
+		order by time
+	</select>
+
+	<update id="updateFeedbackEmail" parameterType="java.util.Map">
+		update t_feedback
+		set contact = #{contact} where member_id = #{memberId}
+	</update>
+
+	<select id="getById" parameterType="integer" resultType="Feedback">
+		select
+		id,system_name as systemName,contact,member_id as memberId,is_process
+		as isProcess,time
+		from t_feedback
+		where id=#{id}
+	</select>
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(id) from t_feedback where 1=1
+		<if test="memberId !=null ">
+			and member_id=#{memberId}
+		</if>
+	</select>
+
+
+
+
+
+
+
+	<delete id="delete" parameterType="integer">
+		delete from t_feedback where
+		id=#{id}
+	</delete>
+
+
+
+	<update id="update" parameterType="Feedback">
+		update
+		t_feedback
+		set
+		system_name=#{systemName},contact=#{contact},question=#{question},member_id=#{memberId},img_path=#{imgPath},
+		is_process=#{isProcess},question_time=#{questionTime},answer_time=#{answerTime},answer=#{answer}
+		where
+		id=#{id}
+	</update>
+
+	<update id="answer" parameterType="Feedback">
+		update
+		t_feedback
+		set
+		is_process=#{isProcess},answer_time=#{answerTime},answer=#{answer}
+		where
+		id=#{id}
+	</update>
+
+
+
+
+
+</mapper>    

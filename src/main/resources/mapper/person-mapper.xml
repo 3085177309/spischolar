@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.PersonDaoI">
+	<!-- <select id="findByEmailPwd" parameterType="Person" resultType="Person"> 
+		select id,name,email,role,password,status,org_id as orgId from t_person where 
+		email=#{email} and password=#{password} </select> <select id="findByNamePwd" 
+		parameterType="Person" resultType="Person"> select id,name,email,role,password,status,org_id 
+		as orgId from t_person where name=#{name} and password=#{password} </select> -->
+	<select id="findByEmailPwd" parameterType="Person" resultType="Person">
+		SELECT t_member.id as id,username as name,t_member.email as email,flag
+		as schoolFlag,pwd as password,forbidden as status,t_org.id AS
+		orgId,login_count as loginCount,isOnline
+		FROM t_member left join t_org
+		on school_flag = flag where userType = 1 and
+		(t_member.email=#{email}
+		or t_member.username=#{email}) and
+		pwd=#{password}
+	</select>
+
+	<select id="findByNamePwd" parameterType="Person" resultType="Person">
+		SELECT t_member.id as id,username as name,t_member.email as email,flag
+		as schoolFlag,pwd as password,forbidden as status,t_org.id AS orgId
+		,login_count as loginCount,isOnline
+		FROM t_member left join t_org on
+		school_flag = flag where userType = 1 and
+		t_member.username=#{name} and
+		pwd=#{password}
+	</select>
+	<delete id="deleteByOrg">
+		DELETE t_member FROM t_member,t_org WHERE school_flag
+		= flag AND userType = 1 AND t_org.id = #{orgId}
+	</delete>
+	<select id="getOrgPersonCount" resultType="integer">
+		SELECT COUNT(1) FROM
+		t_member,t_org WHERE school_flag = flag AND t_org.id=#{orgId}
+	</select>
+
+	<select id="findCount" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT COUNT(id) AS COUNT,department FROM t_member WHERE email !=
+		'Tourist'
+		<if test="schoolFlag != null">
+			and school_flag = #{schoolFlag}
+		</if>
+		GROUP BY department
+	</select>
+
+	<update id="updateUserDepartment" parameterType="Department">
+		UPDATE t_member
+		SET department=#{departmentName} WHERE department_id=#{departmentId}
+	</update>
+
+	<update id="updateStatus" parameterType="java.util.Map">
+		update
+		t_member
+		set
+		isOnline=#{isOnline}
+		<if test="login_count != null">
+			,login_count=#{login_count},login_time=#{login_time}
+		</if>
+		where
+		id=#{id}
+	</update>
+
+	<update id="updateAllStatus">
+		update
+		t_member
+		set
+		isOnline=0
+		where
+		isOnline !=0
+	</update>
+
+	<update id="updatePermission">
+		UPDATE t_member SET permission = 0 WHERE permission =
+		4 and lifespan &lt;
+		NOW();
+	</update>
+
+	<!-- 通过机构id删除站点 <delete id="deleteByOrg"> delete from t_person where org_id=#{orgId} 
+		</delete> <select id="findEmailExists" resultType="integer"> select 1 from 
+		t_person where email=#{email} </select> -->
+
+	<!-- 获取机构下的人员总数量 <select id="getOrgPersonCount" resultType="integer"> select 
+		count(id) from t_person where org_id=#{orgId} </select> -->
+
+
+	<!-- 分页方式获取机构人员列表 <select id="findOrgPerson" parameterType="java.util.Map" 
+		resultType="Person"> select id,name,email,password,remark,register_date as 
+		registerDate,org_id as orgId,status,role from t_person where org_id=#{orgId} 
+		order by id desc limit #{offset},#{size} </select> -->
+
+	<!-- 通过id查找人员详细信息 <select id="findById" resultType="Person"> select id,name,email,password,remark,register_date 
+		as registerDate,org_id as orgId,status,role from t_person where id=#{id} 
+		</select> -->
+
+	<!-- 人员信息持久化 <insert id="insert" parameterType="Person" useGeneratedKeys="true" 
+		keyProperty="id"> insert into t_person(name,email,password,remark,register_date,org_id,status,role) 
+		values(#{name},#{email},#{password},#{remark},#{registerDate},#{orgId},#{status},#{role}) 
+		</insert> -->
+	<!-- 人员信息更新 <update id="update" parameterType="Person"> update t_person 
+		set name=#{name},remark=#{remark},status=#{status},role=#{role} where id=#{id} 
+		</update> -->
+
+	<!-- 人员删除 <delete id="del"> delete from t_person where id=#{id} </delete> -->
+
+	<!-- 修改人员状态 <update id="updateStatus"> update t_person set status=#{status} 
+		where id=#{id} </update> -->
+
+	<!-- 修改人员密码 <update id="updatePwd"> update t_person set password=#{pwd} 
+		where id=#{id} </update> -->
+</mapper>    

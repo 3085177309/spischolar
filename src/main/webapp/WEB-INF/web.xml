@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>Archetype Created Web Application</display-name>
+
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:beans-*.xml</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<!-- Spring 刷新Introspector防止内存泄露 -->
+	<listener>
+		<listener-class>com.wd.comm.listener.ShutdownQuartzListener</listener-class>
+	</listener>
+	<!-- 监听session -->
+	<listener>
+		<listener-class>com.wd.front.listener.SessionListener</listener-class>
+	</listener>
+
+
+	<filter>
+		<filter-name>encoding-filter</filter-name>
+		<filter-class>com.wd.comm.filter.EncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encoding-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>pager-filter</filter-name>
+		<filter-class>com.wd.comm.filter.PagerFiler</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>pager-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>permission-filter</filter-name>
+		<!--<filter-class>com.wd.comm.filter.PermissionFilter</filter-class> -->
+		<filter-class>com.wd.comm.filter.NewPermissionFilter</filter-class>
+		<init-param>
+			<param-name>dir</param-name>
+			<param-value>/backend</param-value>
+		</init-param>
+		<init-param>
+			<param-name>login</param-name>
+			<param-value>/backend/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logout</param-name>
+			<param-value>/backend/logout</param-value>
+		</init-param>
+		<init-param>
+			<param-name>backendIndex</param-name>
+			<param-value>/backend/index</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validateImg</param-name>
+			<param-value>/backend/img</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>permission-filter</filter-name>
+
+		<url-pattern>/backend/*</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>CXFService</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CXFService</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>dispacher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dispacher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>docDilivery</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>docDilivery</servlet-name>
+		<url-pattern>/rpc/docDilivery</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>orgApi</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>orgApi</servlet-name>
+		<url-pattern>/rpc/orgApi</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>userApi</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>userApi</servlet-name>
+		<url-pattern>/rpc/userApi</url-pattern>
+	</servlet-mapping>
+
+	<jsp-config>
+		<taglib>
+			<taglib-uri>http://org.pzy.cms</taglib-uri>
+			<taglib-location>/tld/cms.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/resources/error/404.jsp</location>
+	</error-page>
+
+</web-app>

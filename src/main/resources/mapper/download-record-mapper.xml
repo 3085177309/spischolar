@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.DownloadRecordDaoI">
+
+	<!-- <select id="findDownloadRecord" resultType="Download" parameterType="java.util.Map"> 
+		select id,title,url,num from t_download where title = #{title} and url = 
+		#{url} </select> <update id="updateDownloadRecord" parameterType="java.util.Map"> 
+		update t_download set num = #{num} where id = #{id} </update> <insert id="insertDownloadRecord" 
+		parameterType="Download" useGeneratedKeys="true" keyProperty="id"> insert 
+		into t_download (title,num,url) value (#{title},#{num},#{url}); </insert> -->
+
+	<select id="getAllDownloadList" resultType="java.util.Map"
+		parameterType="java.util.Map">
+		SELECT COUNT(*)/COUNT(DISTINCT(title)) as avg,COUNT(DISTINCT(title))
+		as titleCount,COUNT(*) as count,school,school_flag as schoolFlag FROM
+		t_download_info
+		WHERE 1=1 and school_flag is not null
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="schoolName != null">
+			and school like "%"#{schoolName}"%"
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY school order by count desc
+		<!-- <if test="offset !=null"> limit #{offset},#{size} </if> -->
+	</select>
+
+	<select id="getAllDownloadListCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT COUNT(DISTINCT(school)) FROM t_download_info WHERE 1=1
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="schoolName != null">
+			and school like "%"#{schoolName}"%"
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+	</select>
+
+
+
+	<insert id="insertDownloadRecordInfo" parameterType="DownloadInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_download_info
+		(title,url,time,login_ip,school,username,school_flag,type) value
+		(#{title},#{url},#{time},#{ip},#{school},#{username},#{schoolFlag},#{type});
+	</insert>
+
+
+	<select id="getList" resultType="DownloadInfo" parameterType="java.util.Map">
+		SELECT * FROM (
+		SELECT title FROM t_download_info WHERE 1=1
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY title
+		) AS t1
+		INNER JOIN (
+		SELECT COUNT(*) AS num,title FROM
+		t_download_info WHERE 1=1
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY title
+		) AS t2 ON t1.title = t2.title
+		order by num desc
+		<if test="offset !=null">
+			limit #{offset},#{size}
+		</if>
+
+	</select>
+
+	<select id="getListCount" resultType="integer" parameterType="java.util.Map">
+		SELECT COUNT(DISTINCT(title)) FROM t_download_info WHERE 1=1
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+	</select>
+
+	<select id="getAllCount" resultType="integer" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM t_download_info WHERE 1=1
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+	</select>
+
+	<select id="getInfoList" resultType="DownloadInfo"
+		parameterType="java.util.Map">
+		SELECT id,title,time,login_ip as ip,school,school_flag as
+		schoolFlag,username FROM t_download_info WHERE 1=1
+		<if test="title != null">
+			and title = #{title}
+		</if>
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		ORDER BY TIME DESC
+		<if test="offset !=null">
+			limit #{offset},#{size}
+		</if>
+
+	</select>
+
+	<select id="getInfoListCount" resultType="integer"
+		parameterType="java.util.Map">
+		SELECT count(*) FROM t_download_info WHERE 1=1
+		<if test="title != null">
+			and title = #{title}
+		</if>
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		<if test="beginTime != null">
+			and time > #{beginTime}
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		<if test="endTime != null">
+			AND time &lt; #{endTime}
+		</if>
+	</select>
+
+	<!-- 查询文章下载统计(有记录天数) -->
+	<select id="getDownLoadRecordDay" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT COUNT(*) AS dayNum,school_flag AS orgFlag FROM (
+		SELECT * FROM
+		t_download_info
+		WHERE school_flag IS NOT NULL
+		<if test="beginTime != null">
+			and TIME > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND TIME &lt; #{endTime}
+		</if>
+		<if test="schoolName != null">
+			and school like "%"#{schoolName}"%"
+		</if>
+		<if test="type != -1">
+			AND TYPE = #{type}
+		</if>
+		GROUP BY LEFT(TIME,10),school_flag
+		) AS t GROUP BY school_flag
+	</select>
+
+
+	<!-- 手动数据添加 （数据展示） -->
+	<select id="getDownLoadRecordTitle" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT SUM(IF((TYPE = 0 ),1,0)) AS num, SUM(IF((TYPE = 1 ),1,0)) AS
+		addNum ,title
+		FROM t_download_info WHERE 1=1
+		<if test="beginTime != null">
+			and TIME > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND TIME &lt; #{endTime}
+		</if>
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		GROUP BY title ORDER BY num DESC 
+		<!-- LIMIT 0, #{size} -->
+	</select>
+	<!-- 根据标题查时间段的数据量 -->
+	<select id="getDownLoadRecordByTitle" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT SUM(IF((TYPE = 0 ),1,0)) AS num, SUM(IF((TYPE = 1 ),1,0)) AS
+		addNum , LEFT(TIME,7) AS times, title
+		FROM t_download_info WHERE 1=1
+		<if test="beginTime != null">
+			and TIME > #{beginTime}
+		</if>
+		<if test="endTime != null">
+			AND TIME &lt; #{endTime}
+		</if>
+		<if test="school != null">
+			and school_flag = #{school}
+		</if>
+		AND title = #{title}
+		GROUP BY times ORDER BY num DESC
+	</select>
+
+</mapper>    

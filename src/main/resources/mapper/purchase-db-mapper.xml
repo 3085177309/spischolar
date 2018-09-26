@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.PurchaseDBDaoI">
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(0) from t_purchase_db where org_flag=#{orgFlag} and db_type = #{dbType} 
+	</select>
+
+	<insert id="insert" parameterType="PurchaseDB">
+		insert ignore
+		into
+		t_purchase_db(db_name,url,order_num,org_flag,is_show,db_type)
+		values
+		(#{dbName},#{url},#{orderNum},#{orgFlag},#{showDB},#{dbType})
+	</insert>
+
+	<select id="findById" resultType="PurchaseDB" parameterType="integer">
+		select id,db_name as dbName,url,order_num as orderNum ,org_flag as
+		orgFlag,is_show as showDB,db_type as dbType 
+		from t_purchase_db
+		where id=#{id}
+	</select>
+
+	<delete id="delete">
+		delete from t_purchase_db where id=#{id}
+	</delete>
+
+	<update id="update" parameterType="PurchaseDB">
+		update
+		t_purchase_db
+		set
+		db_name=#{dbName},url=#{url},order_num=#{orderNum},org_flag=#{orgFlag},is_show=#{showDB},db_type=#{dbType} 
+		where
+		id=#{id}
+	</update>
+
+	<select id="findPager" resultType="PurchaseDB" parameterType="java.util.Map">
+		select
+		id,db_name as dbName,url,order_num as orderNum ,org_flag as
+		orgFlag,is_show as
+		showDB
+		,db_type as dbType 
+		from
+		t_purchase_db
+		where
+		org_flag=#{orgFlag}
+		and db_type = #{dbType}
+		ORDER BY ordernum
+		<if test="offset != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<select id="findByOrg" resultType="PurchaseDB" parameterType="string">
+		select
+		id,db_name as dbName,url,order_num as orderNum ,org_flag as
+		orgFlag ,db_type as dbType 
+		from
+		t_purchase_db
+		where
+		org_flag=#{orgFlag} and is_show=1
+		order by
+		order_num asc
+	</select>
+	<delete id="deleteByOrg" parameterType="string">
+		delete from t_purchase_db
+		where org_flag=#{orgFlag}
+	</delete>
+
+	<select id="findSchool" resultType="PurchaseDB" parameterType="java.util.Map">
+		SELECT db_name as dbName,url,order_num as orderNum ,org_flag as
+		orgFlag ,name as org,db_type as dbType 
+		FROM t_purchase_db ,t_org WHERE org_flag = flag
+		<if test="flag != null">
+			AND org_flag=#{flag}
+		</if>
+		AND db_type=#{dbType}
+		AND (db_name LIKE #{val} OR url LIKE #{val}) limit #{offset},#{size}
+	</select>
+	
+	<select id="findSchoolCount" resultType="integer" parameterType="java.util.Map">
+		SELECT count(1) FROM t_purchase_db ,t_org WHERE org_flag = flag
+		<if test="flag != null">
+			AND org_flag=#{flag}
+		</if>
+		AND db_type=#{dbType}
+		AND (db_name LIKE #{val} OR url LIKE #{val})
+	</select>
+</mapper>    

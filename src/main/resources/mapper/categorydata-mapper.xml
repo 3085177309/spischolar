@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.CategorydataDaoI">
+
+	<select id="findNewISSN" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT name FROM JBase WHERE JGuid IN 
+		(SELECT JGuid FROM JBase WHERE name = #{value} AND type = 'ISSN') 
+		AND type = 'ISSN' AND mark = 1 
+	</select>
+
+
+	<select id="find" resultType="Categorydata" parameterType="java.lang.String">
+		select title,rank,value,year,CategorySystem,Category from (
+		SELECT id,title,rank,categorySystem,category,value,year
+		FROM CategoryData AS
+		c RIGHT JOIN (
+		SELECT jguid FROM JBase WHERE NAME =
+		#{value} AND (TYPE
+		='ISSN' OR TYPE='Title') AND mark = 1
+		) AS j ON
+		c.JGuid = j.JGuid WHERE
+		1=1 AND (CategorySystem LIKE 'sci_e' OR
+		CategorySystem LIKE 'ssci' OR
+		CategorySystem LIKE '中科院JCR分区%' )
+		ORDER BY year DESC
+		) as ta group by
+		value,year,CategorySystem,Category,title,rank;
+	</select>
+
+	<select id="findAllCount" resultType="integer" parameterType="java.util.Map">
+		select count(1) from CategoryData where Category=#{category} and
+		year =
+		#{year} and CategorySystem like #{categorySystem}
+	</select>
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(1) from CategoryData where Category=#{category} and
+		year =
+		#{year} and CategorySystem like #{categorySystem} AND value >=
+		#{value}
+	</select>
+
+	<select id="findNewYear" resultType="integer" parameterType="java.util.Map">
+		SELECT MAX(YEAR) FROM `CategoryData` WHERE CategorySystem =
+		#{categorySystem}
+	</select>
+
+</mapper>    

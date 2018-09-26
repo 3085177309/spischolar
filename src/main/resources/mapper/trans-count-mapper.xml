@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wd.backend.dao.TransCountDaoI">
+	<!-- 保存翻译字符数 -->
+	<select id="setNowDayCount" resultType="integer" parameterType="java.util.Map">
+		INSERT INTO trans_count (`org_flag`,`trans_day`,`trans_count`)
+		VALUES(#{orgFlag},NOW(),#{transCount})
+		ON DUPLICATE KEY UPDATE `trans_count`= `trans_count` + #{transCount};
+	</select>
+	<!-- 查询当天以翻译的字符数 -->
+	<select id="getNowDayCount" resultType="integer" parameterType="String">
+		SELECT SUM(trans_count) FROM `trans_count`
+		WHERE date_format(trans_day,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and org_flag = #{orgFlag}
+	</select>
+	<!-- 关键词的文章详细数量 -->
+	<select id="getNowMonthCount" resultType="integer" parameterType="String">
+		SELECT SUM(trans_count) FROM `trans_count`
+		WHERE org_flag = #{orgFlag} and date_format(trans_day,'%Y-%m')=date_format(now(),'%Y-%m')
+	</select>
+
+
+</mapper>    

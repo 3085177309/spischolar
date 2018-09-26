@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.NewsDaoI">
+
+	<insert id="insert" parameterType="News" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		t_news(title,content,times,praise,add_time,is_show,publishers,type)
+		values(#{title},#{content},#{times},#{praise},#{addTime},#{isShow},#{publishers},#{type})
+	</insert>
+
+	<update id="update" parameterType="News">
+		update
+		t_news
+		set
+		title=#{title},content=#{content},type=#{type},is_show=#{isShow},times=#{times},praise=#{praise}
+		where
+		id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="integer">
+		delete from t_news where
+		id=#{id}
+	</delete>
+
+	<select id="get" parameterType="integer" resultType="News">
+		SELECT
+		t_news.id AS id,title,content,times,praise,add_time AS addTime,is_show
+		AS isShow ,t_news.type ,username AS publishers
+		FROM t_news ,t_member WHERE
+		publishers = t_member.id AND t_news.id = #{id}
+	</select>
+
+	<update id="updateTimes" parameterType="integer">
+		update
+		t_news
+		set
+		times =
+		times+1
+		where
+		id=#{id}
+	</update>
+
+	<update id="verify" parameterType="java.util.Map">
+		update
+		t_news
+		set
+		is_show =
+		#{isShow}
+		where
+		id=#{id}
+	</update>
+
+	<update id="increPraise" parameterType="integer">
+		update
+		t_news
+		set
+		praise =
+		praise+1
+		where
+		id=#{id}
+	</update>
+
+	<select id="findCount" resultType="integer" parameterType="java.util.Map">
+		select count(1) from t_news,t_member WHERE publishers = t_member.id
+		<if test="key != null">
+			title like #{key} or content like #{key}
+		</if>
+		<if test="isShow != null">
+			and is_show = #{isShow}
+		</if>
+		<if test="type != null">
+			and type = #{type}
+		</if>
+	</select>
+
+	<select id="findPager" resultType="News" parameterType="java.util.Map">
+		select t_news.id as id,title,content,times,praise,add_time as
+		addTime,is_show as isShow,t_news.TYPE ,username AS publishers
+		from
+		t_news,t_member WHERE publishers = t_member.id
+		<if test="key != null">
+			and title like #{key} or content like #{key}
+		</if>
+		<if test="isShow != null">
+			and is_show != 0
+		</if>
+		<if test="type != null">
+			and type = #{type}
+		</if>
+		order by add_time desc
+		limit #{offset},#{size}
+	</select>
+
+	<select id="findTopN" resultType="News" parameterType="integer">
+		select
+		id,title,content,times,praise,add_time as addTime,is_show as isShow
+		from t_news
+		where is_show != 0
+		order by add_time desc
+		limit 0,#{top}
+	</select>
+
+	<select id="prev" resultType="News" parameterType="int">
+		select
+		id,title,content,times,praise,add_time as addTime,is_show as isShow
+		from t_news where id &lt; #{id} and is_show =1 order by id desc limit
+		1
+	</select>
+
+	<select id="next" resultType="News" parameterType="int">
+		select
+		id,title,content,times,praise,add_time as addTime,is_show as isShow
+		from t_news where id &gt; #{id} and is_show =1 order by id limit 1
+	</select>
+
+</mapper>    

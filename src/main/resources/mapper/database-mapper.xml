@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper    
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.backend.dao.DatabaseDaoI">
+
+	<select id="getCount" parameterType="java.util.Map" resultType="integer">
+		select count(id) from t_database
+		<where>
+			<if test="key != null">
+				cn_name like "%"#{key}"%"
+				or
+				en_name like "%"#{key}"%"
+				or
+				desc_db like "%"#{key}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" parameterType="java.util.Map" resultType="Database">
+		select id,cn_name as cnName,en_name as enName,desc_db as
+		descDB,url,km_url as kmUrl from t_database
+		<where>
+			<if test="key != null">
+				cn_name like "%"#{key}"%"
+				or
+				en_name like "%"#{key}"%"
+				or
+				desc_db like "%"#{key}"%"
+			</if>
+		</where>
+		limit #{offset},#{size}
+	</select>
+
+
+	<select id="findById" parameterType="integer" resultType="Database">
+		select
+		id,cn_name as cnName,en_name as enName,desc_db as descDB,url,km_url as
+		kmUrl from t_database
+		where id = #{id}
+	</select>
+
+</mapper>    
