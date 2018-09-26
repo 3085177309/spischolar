@@ -1,0 +1,22 @@
+/*
+机构管理首页css
+*/
+.org_panel {
+	height: 720px;
+}
+
+#org_detail_panel{
+	height: 410px;
+}
+
+#org_list_panel {
+	width: 295px;
+	float: left;
+	margin-left: 20px;
+}
+
+#org_persons_panel {
+	float: left;
+	margin-left: 20px;
+	width: 1000px;
+}

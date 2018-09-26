@@ -1,0 +1,314 @@
+@charset "utf-8";
+
+html {
+	font-size: 100%;
+	_background-image: url(about:blank);
+	_background-attachment: fixed
+}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td
+	{
+	margin: 0;
+	padding: 0
+}
+
+fieldset,img {
+	border: 0
+}
+
+.fl {
+	float: left;
+	display: inline
+}
+
+.fr {
+	float: right;
+	display: inline
+}
+
+.clearfloat {
+	height: 0;
+	font-size: 0;
+	clear: both;
+	line-height: 0
+}
+
+.cf:before,.cf:after {
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden
+}
+
+.cf:after {
+	clear: both
+}
+
+.cf {
+	zoom: 1
+}
+
+sup,sub {
+	font-size: 100%;
+	vertical-align: baseline
+}
+
+a {
+	transition: color .2s;
+	outline: 0
+}
+
+a:hover {
+	text-decoration: none
+}
+
+:focus {
+	outline: 0
+}
+
+address,caption,cite,code,dfn,em,th,var,optgroup {
+	font-style: normal;
+	font-weight: normal !important
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-size: 100%;
+	font-weight: normal
+}
+
+abbr,acronym {
+	border: 0;
+	font-variant: normal
+}
+
+input,button,textarea,select,optgroup,option {
+	font-family: inherit;
+	font-size: inherit;
+	font-style: inherit;
+	font-weight: inherit
+}
+
+code,kbd,samp,tt {
+	font-size: 100%
+}
+
+body {
+	line-height: 1.5;
+	font-size: 13px
+}
+
+ol,ul {
+	list-style: none
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	table-layout: fixed;
+	word-wrap: break-word
+}
+
+caption,th {
+	text-align: center
+}
+
+.top .login a {
+	font-size: 12px
+}
+
+.banner .time {
+	font-size: 12px
+}
+
+.search {
+	_height: 166px
+}
+
+.search .warp {
+	_background: url("../images/sbg.jpg") 0 19px no-repeat
+}
+
+.search .warp .taber .tab a {
+	font-size: 14px
+}
+
+.search .warp .taber .ck .tit {
+	_padding-left: 25px
+}
+
+.search .warp .taber .ck .tit .text {
+	*overflow: hidden;
+	*height: 33px !important
+}
+
+.search .warp .taber .ck .tit .text .txt {
+	font-size: 14px;
+	line-height: 30px;
+	_background: url("../images/icon.jpg") #fff 7px 8px no-repeat
+}
+
+.search .warp .taber .ck .tit .search-text .ct-time {
+	_width: 16%
+}
+
+.search .warp .taber .ck .tit .search-text .text-set {
+	*width: 30%
+}
+
+.search .warp .taber .ck .tit .search-text .text-set select {
+	_font-size: 20px
+}
+
+.search .warp .taber .ck .tit .submit {
+	background: url("../images/btn.jpg") no-repeat;
+	width: 89px;
+	font-size: 16px;
+	*border-bottom: 0
+}
+
+.search .warp .taber .ck .con a {
+	font-size: 12px
+}
+
+.cloum .left,.cloum .right {
+	*height: 199px;
+	*background: url(../images/cloum2.jpg) #eaeaea left bottom no-repeat
+}
+
+.cloum .left .A1,.cloum .right .A1 {
+	_height: 199px
+}
+
+.cloum .left .A1 A.A2,.cloum .right .A1 A.A2 {
+	padding-right: 21px;
+	*width: 25px;
+	*padding-left: 9px;
+	*height: 143px
+}
+
+.cloum .left .A1 .oo ul,.cloum .right .A1 .oo ul {
+	_width: 267px
+}
+
+.cloum .left .A1 .oo ul li,.cloum .right .A1 .oo ul li {
+	height: 30px;
+	background: url("../images/icon3.jpg") left center no-repeat;
+	padding-left: 6px;
+	_width: 47%;
+	_line-height: 35px;
+	_background-position: left 10px
+}
+
+.cloum .left .A1 .oo ul li em,.cloum .right .A1 .oo ul li em {
+	display: none
+}
+
+.cloum .left .A1 .oo .more,.cloum .right .A1 .oo .more {
+	font-size: 12px
+}
+
+.cloum .Fast .tit {
+	font-size: 16px;
+	_line-height: 18px;
+	_background: url("../images/tdbg.jpg") no-repeat
+}
+
+.cloum .Fast ul li {
+	*width: 154px;
+	_background: url("../images/icon2.jpg") no-repeat
+}
+
+.cloum .Fast ul a {
+	font-size: 12px;
+	display: block
+}
+
+.container {
+	width: 980px
+}
+
+.container aside {
+	_overflow: hidden
+}
+
+.container article {
+	width: 760px;
+	_width: 740px
+}
+
+.container article .map {
+	filter: alpha(opacity = 10);
+	background: #fff
+}
+
+.container article .map .title {
+	_background: url(../images/icon3.gif) 0 14px no-repeat
+}
+
+.container article .subpage_nr .essay {
+	*width: 95%
+}
+
+.container article .subpage_nr .essay .seach .seach-btn {
+	background: url(../images/seach-btn.jpg) no-repeat;
+	border: 0;
+	width: 85px;
+	height: 32px;
+	_line-height: 35px
+}
+
+.container article .subpage_nr .essay .seach .seach-tj {
+	height: 30px
+}
+
+.container article .subpage_nr .essay ul.links li {
+	*padding-right: 10px;
+	*width: 225px;
+	_overflow: hidden
+}
+
+.container article .subpage_nr .essay .fp ul li {
+	padding: 0 2px 10px 13px;
+	*height: 160px;
+	*width: 222px;
+	_padding-left: 10px
+}
+
+.container article .subpage_nr .essay .selectd {
+	_width: 657px
+}
+
+.container article .subpage_nr .essay .selectd .txt {
+	_width: 280px
+}
+
+.container article .subpage_nr .essay .selectd .js_box {
+	min-height: 32px;
+	_height: 32px;
+	line-height: 32px
+}
+
+.footer .links a {
+	font-size: 12px
+}
+
+.footer p {
+	font-size: 12px
+}
+
+.showin {
+	_position: absolute
+}
+
+.showin .showin-bj {
+	filter: alpha(opacity = 50);
+	background: #000
+}
+
+.showin .Win_bj {
+	z-index: 5
+}
+
+.aside-login {
+	display: none
+}

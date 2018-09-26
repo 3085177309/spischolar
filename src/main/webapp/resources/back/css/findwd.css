@@ -1,0 +1,77 @@
+#content{margin-top:-70px}
+.headwrap{width: 1080px;margin: 0 auto;position: relative;}
+.logotext{margin-left: 480px;color: #fff;font: 22px/70px "microsoft yahei";}
+.main {
+    margin: 50px auto 0;
+    width: 1000px;
+    background: #fff;
+    box-shadow: 0 0 5px #ddd;
+    background: #fff;
+}
+.pwdStep{ padding:40px 80px; width:840px; }
+.pwdStep ul{ background:url(../images/dl_icons.png) 0 -670px ; width:100%;}
+.pwdStep ul li{ display:block; float:left; width:100px; text-align:center; margin-right: 146px;}
+.pwdStep ul li a{ cursor:default ;}
+.pwdStep ul li h3{ font:16px/34px "microsoft yahei"; color:#666;} 
+.pwdStep ul li span{ display:block; width:68px; height:68px; margin:0 auto; background:url(../images/dl_icons.png) no-repeat;}
+.pwdStep ul li a{ display:block;}
+.pwdStep ul li.list_ok a h3 , .pwdStep ul li.list_on a h3{ color:#ff5c33;}
+.pwdStep ul li.list_ok span.user{ background-position:0 -344px;}
+.pwdStep ul li.list_ok span.verification{ background-position:-82px -344px;}
+.pwdStep ul li.list_ok span.pwd{ background-position:-1px -422px;}
+.pwdStep ul li.list_ok span.finish{ background-position:-82px -422px;}
+
+.pwdStep ul li.list_on span.verification{ background-position:-1px -504px;}
+.pwdStep ul li.list_on span.pwd{ background-position:-82px -504px;}
+
+.pwdStep ul li.list_no span.verification{ background-position:0 -809px;}
+.pwdStep ul li.list_no span.pwd{ background-position:-82px -584px;}
+.pwdStep ul li.list_no span.finish{ background-position:-1px -584px;}
+
+
+
+
+
+
+
+
+
+
+
+
+.centered-block{ margin-left: auto !important; margin-right: auto !important;border: 0; }
+.centered-block td{border:0;}
+
+
+.pwdCont{width:1000px;/* padding-top: 50px; */padding-bottom:80px;margin-top: 120px;}
+.pwdCont ul{width: 780px;margin: auto;padding-top: 60px;}
+.pwdCont li{overflow: hidden;margin-bottom: 25px;}
+.pwdInput{ float:left; width:100%;}
+.pwdCont li label{font-family:"microsoft yahei";
+ text-align:right; float:left;line-height:45px;  padding-right:10px; width:15%; display:block;}
+.pwdCont li label em{color: #ed0101}
+.reg-put{ width:48%;height:43px;border:1px solid #e0e0e0;padding-left:20px;display:inline; font:14px/43px ""; float:left; }
+
+.reg-put.w{ width:22%;}
+.reg-put.w160{ width:29%;}
+.pwdCont li img{ height:40px; width:15%;float:left; margin:0 10px 0 15px; background:#f7f7f7}
+.pwdCont li span{ line-height:45px; width:70px; cursor:pointer; color:#333; font-size:13px;}
+.pwdCont li span a{color:#3283c1;}
+.reg-btn{width: 37%; margin-left: 16%; height: 44px; border: 0; color: #fff; line-height: 43px; border-radius: 3px; cursor: pointer; display: block; background: #1980cb; font-size: 16px; } 
+.item-tip{padding-left: 0px; background: #fff; line-height: 15px;margin-left: 10px;} 
+
+.pwdInput span.inputText{ line-height:45px; font-weight:700; padding-left:20px;}
+
+input.pwdInput_text:hover{  border:1px solid #f26033; box-shadow:2px 2px 5px #fddfd6;}
+input.pwdInput_text:focus{ border:1px solid #f26033; box-shadow:2px 2px 5px #fddfd6;}
+.frameInfo{ float:right; width:25%; height:40px;  line-height:20px; padding-top:10px; margin-left:15px; color:red}
+.frameInfo i{ display:block; background:url(../images/zc.png) no-repeat;width:16px; height:24px; vertical-align:middle; margin-right:5px; float:left; margin-top:4px;}
+.frameInfo span.flase i{  background-position:0 -67px; }
+.frameInfo span.wran i{ background-position:-20px -67px; }
+.frameInfo span.true i{  background-position:-41px -67px;display:none; }
+.pwdFrame .submit{color:#fff; width:37%; margin-left:16%;height:48px; border:0;color:#fff; line-height:43px; border-radius:3px; cursor:pointer; display:block;  background:#ff5c33; font-size:16px;  }
+.pwdFrame .submit:hover{ background:#ff6f3d; border-color:#ff6f3d;  box-shadow:0 2px 3px #f3f3f3;}
+.frameInfo span.wran{ color:#333;}
+
+.pwdFrame a.get_code{ display:block; height:43px;border:1px solid #f3d5ccfloat:left; line-height:43px;background:#fffaf9; color:#ff6f3d;border:1px solid #f3d5cc; text-align:center; background:#fffaf0; float:left; width:28%; margin-left:10px;}
+.pwdFrame a.wait_code{ border:1px solid #e0e0e0; color:#aaa; background:#f5f5f5;}

@@ -1,0 +1,39 @@
+{
+	"discipline_system":{
+		"_all" : {"enabled" : false},
+		"properties":{
+			"docType":{
+				"type":"integer",
+				"index":"not_analyzed"
+			},
+			"authorityDatabase":{
+				"type":"string",
+				"index":"not_analyzed"
+			},
+			"discipline":{
+				"type":"string",
+				"analyzer":"mmseg"
+			},
+			"name":{
+				"type":"string",
+				"analyzer":"mmseg"
+			},
+			"year":{
+				"type":"integer",
+				"index":"not_analyzed"
+			},
+			"dbYearDiscipline":{
+				"type":"string",
+				"index":"not_analyzed"
+			},
+			"isNew":{
+				"type":"integer",
+				"index":"not_analyzed"
+			},
+			"rangeYear":{
+				"type":"string",
+				"index":"no"
+			}
+		}
+	}
+}

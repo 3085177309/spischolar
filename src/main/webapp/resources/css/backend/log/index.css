@@ -1,0 +1,29 @@
+.log_main div.box {
+	float: left;
+	width: 326px;
+	border: 1px solid gray;
+	margin-left: 5px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.log_main div.box div.pagination {
+	margin: 0 0 5px 5px;
+	padding: 0;
+}
+
+.log_main div.box dl {
+	display: inline-block;
+	width: 310px;
+	height: 275px;
+	padding: 5px;
+	margin: 0;
+	padding: 5px;
+}
+
+.log_main div.box dd span {
+	display: inline-block;
+	width: 240px;
+	height: 20px;
+	overflow: hidden;
+}

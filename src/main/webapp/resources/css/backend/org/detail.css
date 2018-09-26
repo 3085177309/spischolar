@@ -1,0 +1,70 @@
+/*
+	机构详细页css
+*/
+#org_detail_outer ol {
+	display: block;
+	clear: both;
+}
+
+#org_detail_outer ul {
+	float: left;
+	width: 495px;
+	margin-right: 10px;
+}
+
+#org_detail_outer ul li input {
+	width: 350px;
+	margin-left: 10px;
+	position: relative;
+	top: 3px;
+	height: 25px;
+	line-height: 25px;
+}
+
+#org_detail_outer ul li span {
+	width: 80px;
+	display: inline-block;
+	font-weight: bolder;
+	text-align: right;
+}
+
+#org_detail_outer ul li textarea {
+	width: 350px;
+	margin-left: 5px;
+	height: 80px;
+}
+
+#org_detail_outer #ip_opt_panel {
+	float: left;
+	position: relative;
+	top: -7px;
+}
+
+#org_detail_outer #ip_opt_panel span{
+	font-weight: bold;
+}
+
+#ip_add_panel{
+	margin-top: 21px;
+}
+
+#ip_add_panel input{
+	height: 23px;
+}
+#ip_list_panel{
+	height: 283px;
+	overflow: auto;
+}
+#ip_list_panel div{
+	height: 24px;
+	border-bottom: 1px solid #999;
+}
+#ip_list_panel button {
+	float: right;
+	margin-right: 5px;
+}
+
+#add_ip_btn{
+	position: relative;
+	top: -4px;
+}

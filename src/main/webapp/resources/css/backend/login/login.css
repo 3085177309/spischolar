@@ -1,0 +1,44 @@
+#center_panel {
+	width: 400px;
+	margin: 200px auto;
+}
+
+#center_panel dl {
+	width: 330px;
+	border: 1px solid #999;
+	padding: 20px;
+}
+
+#center_panel dt {
+	width: 180px;
+	display: block;
+	height: 20px;
+	margin: 0 auto 30px auto;
+	font-size: 25px;
+}
+
+#center_panel dd {
+	margin: 0 0 10px 0;
+	display: block;
+	height: 30px;
+}
+
+#center_panel input {
+	width: 260px;
+	height: 30px;
+	position: relative;
+	top: 3px;
+}
+
+#center_panel a {
+	font-size: 10px;
+	float: right;
+	margin-right: 10px;
+	margin-top:12px;
+}
+
+#center_panel button {
+	display: inline-block;
+	float: right;
+	margin-right:10px;
+}

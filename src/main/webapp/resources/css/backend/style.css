@@ -1,0 +1,45 @@
+.bs-sidebar .nav > li > a,
+.bs-sidebar .nav > li > span {
+  display: block;
+  color: #666;
+  padding: 5px 20px;
+}
+ul.bs-sidenav > li > a{
+	background-color: #f3f3f3;
+	font-weight: bold;
+}
+.bs-sidebar .nav > li > span { 
+  color: #aaa; 
+  font-size: 12px; 
+  font-weight: 700; 
+}
+.bs-sidebar .nav > li > a:hover,
+.bs-sidebar .nav > li > a:focus {
+
+  text-decoration: none;
+  background-color: #f3f3f3;
+  border-right: 1px solid #2AC966;
+  color: #333;
+}
+.bs-sidebar .nav > .active > a,
+.bs-sidebar .nav > .active:hover > a,
+.bs-sidebar .nav > .active:focus > a {
+  font-weight: bold;
+  color: #2AC966;
+  background-color: transparent;
+  border-right: 2px solid #2AC966;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-sidebar .nav .nav {
+  margin-bottom: 8px;
+}
+.bs-sidebar .nav .nav > li > a {
+  padding-top:    3px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  font-size: 90%;
+  -webkit-border-radius: 5px 0 0 5px;
+     -moz-border-radius: 5px 0 0 5px;
+          border-radius: 5px 0 0 5px;
+}

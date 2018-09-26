@@ -1,0 +1,993 @@
+/*头部样式 使用spis通用的*/
+/*——————————————————————————————————————————————————————————————————————————————————————*/
+@media (max-width: 1446px){
+	.head .navbar {
+		width: 1000px;
+	}
+}
+
+.i {
+	background: url(../images/i.png) no-repeat
+}
+
+.i-user {
+	background-position: -40px 0
+}
+
+.i-user:hover {
+	background-position: -40px -33px
+}
+
+.i-arraw {
+	background-position: -80px 0
+}
+
+.i-arraw:hover {
+	background-position: -80px -20px
+}
+
+.i-triangle {
+	background-position: -100px 0
+}
+
+.i-doc {
+	background-position: 0px -70px
+}
+
+.i-history {
+	background-position: -25px -70px
+}
+
+.i-collect {
+	background-position: -50px -70px
+}
+
+.i-senior {
+	background-position: -100px -80px
+}
+
+.i-oafirst {
+	background-position: -100px -100px
+}
+
+.i-oaicon {
+	background-position: -86px -100px
+}
+.head {
+	height: 398px;
+	position: relative;
+	z-index: 99;
+	background: url(../images/index-bg.jpg) no-repeat top center;
+}
+
+.sub-head {
+	height: 65px
+}
+
+.navbar {
+	width: 1190px;
+	margin: 0 auto;
+	height: 65px;
+	font-size: 14px;
+	*z-index: 1
+}
+
+.navbar .logo {
+	background: url(../images/new-logo.png) no-repeat 40px -11px;
+	width: 180px;
+	height: 37px;
+	display: block;
+	float: left;
+	padding: 2px 17px 0 40px;
+	text-indent: -9999px;
+	margin-right: 15px;
+	border: 1px solid transparent;
+	margin-top: 12px;
+	border-radius: 19px;
+	position: relative;
+}
+.navbar .logo.in,
+.navbar .logo:hover{
+	border: 1px solid #fff;
+	background-color: #8898ab;
+}
+.navbar .logo a {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+.navbar .logo a i{
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 17px;
+	top:10px;
+	background: url(../images/i.png) no-repeat 0 0;
+}
+
+.navbar .nav {
+	float: left
+}
+
+.navbar .nav li {
+	height: 65px;
+	float: left;
+	margin-right: 15px
+}
+
+.navbar .nav a {
+	display: block;
+	float: left;
+	margin-top: 15px;
+	height: 33px;
+	line-height: 33px;
+	padding: 0 17px;
+	border: 1px solid transparent;
+	border-radius: 17px;
+	color: #fff
+}
+
+.navbar .nav a i {
+	background: url(../images/i.png) no-repeat;
+	display: block;
+	float: left;
+	width: 20px;
+	height: 20px;
+	margin-top: 6px;
+	margin-right: 3px
+}
+
+.navbar .nav a:hover,.navbar .nav a.in {
+	border-color: #fff;
+	text-decoration: none;
+	background-color: #8898ab
+}
+
+.navbar .nav a.home i {
+	background-position: 0 0
+}
+
+.navbar .nav a.journal i {
+	background-position: 0 -20px
+}
+
+.navbar .nav a.article i {
+	background-position: 0 -40px
+}
+
+.navbar .user-setting {
+	float: right;
+	color: #fff;
+	height: 65px;
+	*z-index: 1
+}
+
+.navbar .user-setting a {
+	color: #fff
+}
+
+.navbar .user-setting .log-reg {
+	float: left;
+	margin-right: 25px;
+	margin-top: 22px
+}
+
+.navbar .user-setting .log-reg span {
+	margin: 0 2px
+}
+
+.navbar .user-info {
+	float: left;
+	margin-top: 15px;
+	height: 33px;
+	border: 1px solid #fff;
+	border-radius: 17px;
+	padding: 0 17px;
+	line-height: 33px;
+	cursor: pointer;
+	position: relative;
+	*z-index: 1;
+	*width: 120px
+}
+
+
+.navbar .user-info:hover {
+	background: #fff;
+	color: #3cacc8
+}
+
+.navbar .user-info:hover .i-user {
+	background-position: -40px -33px
+}
+
+.navbar .user-info:hover .i-arraw {
+	background-position: -80px -20px
+}
+
+.navbar .user-info:hover .user-select {
+	display: block
+}
+
+.navbar .user-info span {
+	padding: 0 0 0 10px;
+    float: left;
+    max-width: 142px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: normal;
+    font-family: arial;
+}
+.navbar .user-info span.try{
+	padding: 0;
+}
+
+.navbar .user-info .i-user {
+	width: 33px;
+	height: 33px;
+	display: block;
+	float: left;
+	margin-left: -17px
+}
+
+.navbar .user-info .i-arraw {
+	width: 20px;
+	height: 20px;
+	float: right;
+	display: block;
+	margin-top: 6px;
+	margin-right: -10px;
+	margin-left: 10px;
+}
+
+.navbar .user-info .user-select {
+	display: none;
+	position: absolute;
+	top: 34px;
+	left: 6px;
+	right: 6px;
+	z-index: 1
+}
+
+.navbar .user-info .user-select .i-triangle {
+	position: absolute;
+	left: 50%;
+	top: 5px;
+	margin-left: -10px;
+	display: block;
+	width: 20px;
+	height: 10px
+}
+
+.navbar .user-info .user-select p {
+	border-radius: 4px 4px 0 0;
+	border: 1px solid #fff;
+	background: #fff;
+	margin-top: 15px;
+	border-radius: 6px;
+	padding: 5px 0;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	*border: 1px solid #ccc
+}
+
+.navbar .user-info .user-select p a {
+	text-align: center;
+	display: block;
+	line-height: 33px;
+	color: #333
+}
+
+.navbar .user-info .user-select p a:hover {
+	background: #fff;
+	color: #3cacc8;
+	text-decoration: none
+}
+
+
+
+.login-btn {
+	font-size: 16px;
+	line-height: 35px;
+	width: 100%;
+	height: 35px;
+	cursor: pointer;
+	text-align: center;
+	color: #fff;
+	border: 0;
+	border-radius: 4px;
+	background: #5bd0ed
+}
+
+.register-btn {
+	font-size: 14px;
+	line-height: 45px;
+	width: 104px;
+	height: 30px;
+	cursor: pointer;
+	text-align: center;
+	color: #fff;
+	border: 1px solid #5bd0ed;
+	border-radius: 2px;
+	background: #5bd0ed
+}
+.fr {
+    float: right;
+}
+
+
+.modaltab .item-tip {
+	line-height: 15px;
+	position: absolute;
+	z-index: 1;
+	top: 52px;
+	left: 10px;
+	display: none;
+	padding: 6px;
+	color: #fff;
+	border-radius: 2px;
+	background: #dd514c
+}
+
+.modaltab .item-tip::after {
+	position: absolute;
+	top: -15px;
+	left: 10px;
+	display: block;
+	width: 0;
+	height: 0;
+	content: ' ';
+	border-top: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #dd514c;
+	border-left: 8px solid transparent
+}
+
+.modaltab .item-error {
+	display: block;
+	height: auto
+}
+
+.modaltab .item-pass {
+	top: 14px;
+	right: 10px;
+	left: auto;
+	display: block;
+	width: 15px;
+	height: 15px;
+	padding: 0;
+	background: url(../images/pass.gif) no-repeat 0 0
+}
+
+.modaltab .item-pass.ValiyCode {
+	background: none
+}
+
+.modaltab .item-pass:after {
+	display: none
+}
+
+.item-tip {
+	line-height: 15px;
+	display: inline-block;
+	height: 15px;
+	/*padding-left: 10px;*/
+	background: #fff
+}
+
+.item-error {
+	padding-left: 20px;
+	background: url(../images/error.gif) no-repeat 0 0;
+	*margin-top: -4px
+}
+
+.item-pass {
+	padding-left: 20px;
+	background: url(../images/pass.gif) no-repeat 0 0
+}
+
+.reg-font {
+	font-size: 21px;
+	font-weight: bold;
+	padding: 80px 20px 40px 20px
+}
+
+.reg-font img {
+	margin-top: -3px;
+	vertical-align: middle
+}
+
+.showWin {
+	font-family: arial;
+	font-size: 12px;
+	display: inline-block;
+	*zoom: 1;
+	*display: inline;
+	position: fixed;
+	z-index: 999;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	/*transition: all .2s;*/
+	/*opacity: 0;*/
+	/*_position: absolute;
+    _top: expression(documentElement.scrollTop+"px");
+    _height: expression(documentElement.offsetHeight+"px");*/
+	/**display: none;
+    display: none\9;*/
+}
+
+.showWin-new {
+	display: none;
+	z-index: 999999;
+}
+.showWin-new input{
+	box-sizing: content-box
+}
+
+.delivers-open .delivers,.modal-open .lgWin,.bibliography-open .bibliography,.modal-open-change .change-title-box
+	{
+	z-index: 9999999;
+	zoom: 1;
+	opacity: 1;
+}
+
+.delivers {
+	
+}
+
+.delivers-open .delivers {
+	display: block;
+}
+
+.delivers-open .delivers .Win-close:hover {
+	background-color: #ddd;
+}
+
+.change-title-box .Win-cont p {
+	padding: 10px 15px;
+	line-height: 1.5;
+	font-size: 14px;
+}
+
+.showWin .Win-bj {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: url("../images/reglogin_bg.png") repeat 0px 0px;
+	z-index: 99999999;
+}
+
+.showWin .Win-cont {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	width: 480px;
+	background: #fff;
+	z-index: 99999999999;
+}
+
+.showWin #Win-T {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: left
+}
+
+.showWin #Win-T a {
+	font-size: 12px;
+	font-weight: normal;
+	margin-left: 10px
+}
+
+.showWin #Win-T .loginTab {
+	font-size: 0;
+	position: relative;
+	padding: 0 20px;
+	border-bottom: 2px solid #d8d8d8
+}
+
+.showWin #Win-T .loginTab a {
+	font-size: 18px;
+	line-height: 50px;
+	display: inline-block;
+	width: 70px;
+	height: 50px;
+	margin-left: 0;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	color: #333
+}
+
+.showWin #Win-T .loginTab .line {
+	position: absolute;
+	bottom: -2px;
+	left: 20px;
+	display: block;
+	width: 70px;
+	height: 2px;
+	-webkit-transition: left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.175);
+	transition: left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.175);
+	background: #5bd0ed
+}
+
+.showWin .Win-close {
+	position: absolute;
+	top: 11px;
+	right: 11px;
+	display: block;
+	width: 14px;
+	height: 14px;
+	cursor: pointer;
+	opacity: .8;
+	background: url(../images/close.gif) no-repeat
+}
+
+.Win-pannel {
+	padding: 10px 20px;
+	text-align: left
+}
+
+.cont-T {
+	line-height: 30px;
+	text-align: left;
+	color: #000
+}
+
+.cont-T a {
+	color: #006ed4
+}
+
+.cont-B {
+	margin-bottom: 8px
+}
+
+.red {
+	color: #e10000
+}
+
+.cont-B textarea {
+	width: 98%;
+	height: 90px;
+	padding: 3px 1%;
+	border: 1px solid #cdcdcd;
+	border-radius: 2px
+}
+
+.cont-B input {
+	width: 98%;
+	height: 27px;
+	padding: 0 1%;
+	border: 1px solid #cdcdcd;
+	border-radius: 2px
+}
+
+.cont-B input.verify {
+	width: 40%;
+	vertical-align: middle
+}
+
+.cont-B img {
+	vertical-align: middle
+}
+
+.cont-T .sc_selopt a {
+	color: #313232
+}
+
+.cont-T .sc_selbox {
+	float: right
+}
+
+.cont-T .sc_selbox span {
+	line-height: 24px
+}
+
+.time-select {
+	display: block
+}
+
+.jt-btn {
+	display: block;
+	float: left;
+	width: 78px;
+	height: 26px;
+	margin-right: 10px;
+	background: url(../images/jt-btn.png) no-repeat
+}
+
+.cont-B input.submit-btn {
+	line-height: 28px;
+	width: 120px;
+	margin-top: 10px
+}
+
+#lgWin .Win-cont {
+	top: 50%;
+	left: 50%;
+	/*overflow: hidden;*/
+	width: 360px;
+	transition: all .2s;
+	-moz-transform: translate(-50%, -60%) scale(1);
+	-ms-transform: translate(-50%, -60%) scale(1);
+	-o-transform: translate(-50%, -60%) scale(1);
+	transform: translate(-50%, -60%) scale(1);
+	border: 1px solid #ddd;
+	border-radius: 6px
+}
+
+@media \0screen\,screen\9 {
+	#lgWin .Win-cont {
+		margin-top: -205px;
+		margin-left: -160px
+	}
+}
+
+.modal-open #lgWin {
+	opacity: 0;
+}
+
+.modal-open #lgWin .Win-cont {
+	-moz-transform: translate(-50%, -60%) scale(1);
+	-ms-transform: translate(-50%, -60%) scale(1);
+	-o-transform: translate(-50%, -60%) scale(1);
+	transform: translate(-50%, -60%) scale(1);
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.3)
+}
+
+#lgWin .Win-pannel {
+	position: relative
+}
+
+#lgWin .Win-close {
+	top: 15px;
+	right: 20px;
+	width: 18px;
+	height: 18px;
+	transition: all .2s ease-in-out;
+	background: url(../images/close-btn.png)
+}
+
+#lgWin .Win-close:hover {
+	opacity: .6;
+	filter: alpha(opacity = 60)
+}
+
+#lgWin .Win-close:active {
+	opacity: 0.8
+}
+
+.modaltab {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	display: none;
+	transition: all 0.5s ease-in-out
+}
+
+@media screen\9\0 {
+	.modaltab {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: none
+	}
+}
+
+.modaltab.active {
+	display: block
+}
+
+@media screen\9\0 {
+	.modaltab.active {
+		display: block
+	}
+}
+
+.modaltab .placeholder-poill {
+	font-size: 14px;
+	position: absolute;
+	top: 12px;
+	left: 35px;
+	color: #999
+}
+
+.modaltab .registerbox .placeholder-poill {
+	top: 10px;
+	left: 16px
+}
+
+.loginTabbox {
+	height: 320px
+}
+
+.loginbox {
+	overflow-y: hidden;
+	width: 320px;
+	margin: 0 auto;
+	*width: 310px
+}
+
+.loginbox h3 {
+	font-size: 22px;
+	font-weight: bold;
+	padding: 10px 0 0 0;
+	text-align: center
+}
+
+.login-error-box {
+	height: 16px;
+	color: #fc4343;
+	font-size: 12px
+}
+
+.loginbox ul {
+	margin-top: 20px;
+	margin-bottom: 10px
+}
+
+.loginbox ul li {
+	position: relative;
+	margin-bottom: 20px;
+	*z-index: 1
+}
+
+.loginbox ul li .fwLink:hover {
+	color: #005cd9;
+}
+
+.loginbox ul li.mb0 {
+	margin-bottom: 0
+}
+
+.login-input {
+	font-size: 14px;
+	width: 268px;
+	height: 16px;
+	padding: 12px 15px 12px 35px;
+	-webkit-transition: .3s;
+	-moz-transition: .3s;
+	-o-transition: .3s;
+	transition: .3s;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	*width: 296px;
+	*padding-right: 0
+}
+
+.login-input:focus {
+	border-color: #1980cc
+}
+
+.login-input.error {
+	border-color: #e17878
+}
+
+.registerbox .login-input {
+	width: 288px;
+	padding: 12px 15px 12px 15px
+}
+
+.register-form label {
+	display: none
+}
+
+.register-form .login-input {
+	text-indent: 0
+}
+
+.register-form .login-input.w {
+	width: 180px
+}
+
+.register-form .ValiyCode {
+	right: 100px
+}
+
+.register-form #valiycode {
+	margin-left: 5px;
+	vertical-align: middle
+}
+
+.loginbox .register-form .login-btn {
+	margin-top: 0;
+}
+
+.loginbox .register-form .reg-btn-lodding {
+	background: #5bd0ed url("../images/loading27.gif") no-repeat 88px 9px;
+}
+
+.register-form .checkedbox {
+	margin-top: -2px;
+	vertical-align: middle
+}
+
+.loginbox .username,.loginbox .password {
+	*padding-right: 0;
+	*width: 282px
+}
+
+.loginbox .login-icon {
+	position: absolute;
+	top: 4px;
+	top: 12px;
+	left: 12px;
+	left: 10px;
+	display: block;
+	width: 17px;
+	height: 17px
+}
+
+.loginbox .login-icon.icon-username {
+	background: url(../images/login-user.gif) no-repeat
+}
+
+.loginbox .login-icon.icon-password {
+	background: url(../images/login-pwd.gif) no-repeat
+}
+
+.auto-login {
+	vertical-align: middle
+}
+
+.loginbox .login-submit-label {
+	line-height: 32px;
+	display: block;
+	height: 35px;
+	margin-top: 20px;
+	cursor: pointer;
+	text-align: center;
+	text-indent: 0;
+	text-transform: uppercase;
+	color: #888;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	outline: 0;
+}
+
+.loginbox .login-btn {
+	border: none
+}
+
+.loginbox .login-btn:hover {
+	border-color: #cac8c8
+}
+
+.loginbox .login-btn:active {
+	border-color: #dcdcdc
+}
+
+.loginhr {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	height: 1px;
+	margin-bottom: 20px;
+	border: 0;
+	background: #eee
+}
+
+a.forget-pwd {
+	text-decoration: underline;
+	color: #1b66c7
+}
+
+a.login-btn {
+	text-decoration: none;
+	color: #fff
+}
+
+a.login-btn:hover {
+	background-color: #227fda
+}
+
+.social-login {
+	display: none
+}
+
+.social-login .tc {
+	margin-top: 5px
+}
+
+.social-login .tc a {
+	font-size: 0;
+	margin: 0 5px;
+	cursor: not-allowed
+}
+
+.social-login .qq,.social-login .weibo {
+	font-size: 12px;
+	display: inline-block;
+	width: 36px;
+	height: 36px;
+	margin-right: 10px;
+	text-indent: -9999px;
+	background: url(../images/qq.gif) no-repeat 0 -36px
+}
+
+.social-login .weibo {
+	background: url(../images/weibo.gif) no-repeat 0 -36px
+}
+
+.login-fd {
+	line-height: 58px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 58px;
+	text-indent: 20px
+}
+
+a.register-btn {
+	line-height: 32px;
+	display: inline-block;
+	vertical-align: middle;
+	text-decoration: none;
+	text-indent: 0;
+	color: #fff;
+	border-bottom: 3px solid #3e90a5;
+	border-radius: 3px
+}
+
+a.register-btn:hover {
+	border-bottom-color: #2879ca;
+	background-color: #2a8ef2
+}
+
+a.register-btn:active {
+	border-bottom: 3px solid #2a8ef2;
+	background-color: #389cff
+}
+
+.login-fd a {
+	float: right;
+	margin: 10px 20px
+}
+
+.ipInfo {
+	line-height: 36px;
+	height: 36px;
+	margin: 0 -15px;
+	text-align: center;
+	border-top: 1px solid #dfdfdf;
+	background: #f2f2f2
+}
+
+.showWin #inftips {
+	position: absolute;
+	right: 50%;
+	bottom: 50%;
+	width: 240px;
+	height: 120px;
+	margin-right: -120px;
+	margin-bottom: -60px;
+	background: #fff
+}
+
+.showWin #inftips p {
+	font-size: 14px;
+	padding: 10px;
+	text-align: center;
+	text-indent: 30px;
+	background: url(../images/inftips1.png) no-repeat 15px 13px
+}
+
+.showWin #inftips .Win-pannel .endiv {
+	margin-top: 15px;
+	text-align: center
+}
+
+.showWin #inftips .btn-c {
+	margin: 0 10px;
+	color: #fff
+}

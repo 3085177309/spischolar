@@ -1,0 +1,110 @@
+
+insert into t_discipline(flag,name) select subject_code,subject_name from tb_lse_meta_subject
+
+
+
+
+create table t_journal_metadata
+(
+   flag                 varchar(32) not null,
+   name                 varchar(400),
+   alias                varchar(400),
+   creator              varchar(150),
+   editor               varchar(150),
+   publisher            varchar(200),
+   discipline           varchar(200),
+   subjectClc           varchar(100),
+   subjectDesc          text,
+   desc_journal         text,
+   address              varchar(200),
+   postal_code          varchar(20),
+   tel                  varchar(50),
+   norms                varchar(30) comment '对应原表的title_format字段（值主要为:在线/纸本）',
+   email                varchar(200),
+   country              varchar(50),
+   publish_cycle        varchar(50),
+   year                 varchar(10),
+   issn                 varchar(30),
+   issns                 varchar(300),
+   cssn                 varchar(30),
+   lan                  varchar(20),
+   first_letter         CHAR(1),
+   eissn                varchar(30),
+   is_oa                int,
+   impact_factor        float,
+   subject              text,
+   abstract             text,
+   onlines              text,
+   history              text,
+   publisher_json       text,
+   publishing           text,
+   authors              text,
+   db_id                int,
+   doc_type             varchar(20),
+   shoulu               varchar(300),
+   id                   int not null auto_increment,
+   image				varchar(200)
+   primary key (id)
+)default charset=utf8 collate=utf8_bin;
+
+
+insert into t_journal_metadata(
+	flag,name,alias,
+	creator,editor,publisher,
+	discipline,subjectClc,subjectDesc,
+	desc_journal,address,postal_code,
+	tel,norms,email,
+	country,publish_cycle,year,
+	doc_type,issn,cssn,
+	lan,first_letter,eissn,
+	shoulu,is_oa,impact_factor,
+	subject,abstract,onlines,
+	history,publisher_json,publishing,
+	authors,issns,image
+) 
+select 
+	title_id,title_mainName,title_viseName,
+	title_creator,title_editor,title_publisher,
+	title_discipline,title_subjectClc,title_subjectDesc,
+	 title_desc,title_descAddress,title_postalCode,
+	 title_tel,title_format,title_email,
+	 title_country,title_publishCycle,title_date,
+	 title_docType,title_issn,title_cssn,
+	 title_language,title_firstLetter,title_eissn,
+	 title_shoulu,title_isOA,title_impact_factor,
+	 subject,abstrats,onlines,
+	 historys,publisher,publishing,
+	 authors,title_issns,title_coverURL
+from tb_lse_data_titles
+
+
+update t_journal_metadata set alias=null where alias=''
+update t_journal_metadata set editor=null where editor=''
+update t_journal_metadata set publisher=null where publisher=''
+update t_journal_metadata set discipline=null where discipline=''
+update t_journal_metadata set subjectClc=null where subjectClc=''
+update t_journal_metadata set desc_journal=null where desc_journal=''
+update t_journal_metadata set issn=null where issn=''
+update t_journal_metadata set cssn=null where cssn=''
+update t_journal_metadata set eissn=null where eissn=''
+update t_journal_metadata set shoulu=null where shoulu=''
+
+
+
+
+
+
+select * from t_discipline_system t1, (select 
+	authority_database, MAX(year) as year 
+from 
+	t_discipline_system group by authority_database) t2
+where 
+	t2.authority_database=t1.authority_database and t2.year=t1.year
+	
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+/*
+用户列表页css
+*/
+
+#person_list_outer_container{
+	height: 417px;
+}
+
+.user_pagination{
+	float: right;
+}

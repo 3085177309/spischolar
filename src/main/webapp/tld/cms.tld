@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3g.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd" version="2.0">
+	<tlib-version>1.2</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>Forms Taglib</short-name>
+	<uri>http://org.pzy.cms</uri>
+	<description>
+
+	</description>
+
+	<tag>
+		<name>cmsUrl</name>
+		<tag-class>com.wd.front.module.tag.CmsUrl</tag-class>
+		<body-content>empty</body-content>
+		
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>showRoleMenus</name>
+		<tag-class>com.wd.front.module.tag.backend.ShowRoleMenus</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>permissionTag</name>
+		<tag-class>com.wd.front.module.tag.backend.PermissionTag</tag-class>
+		<body-content>scriptless</body-content>
+
+		<attribute>
+			<name>flag</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>articleIndexPageUrl</name>
+		<tag-class>com.wd.front.module.tag.ArticleIndexPageUrlTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>getOrgFlag</name>
+		<tag-class>com.wd.front.module.tag.GetOrgFlagTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>getSiteFlag</name>
+		<tag-class>com.wd.front.module.tag.GetSiteFlagTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>hasEval</name>
+		<tag-class>com.wd.front.module.tag.HasEvalTag</tag-class>
+		<body-content>scriptless</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>hasShouLu</name>
+		<tag-class>com.wd.front.module.tag.HasShouLuTag</tag-class>
+		<body-content>scriptless</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>moreAuthorityJournalUrl</name>
+		<tag-class>com.wd.front.module.tag.MoreAuthorityJournalUrlTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>disciplineSystem</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.wd.backend.model.DisciplineSystem</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>shortTitleShow</name>
+		<tag-class>com.wd.front.module.tag.ShortTitleShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>title</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>keywordShow</name>
+		<tag-class>com.wd.front.module.tag.KeywordShowTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>journalLinkListShow</name>
+		<tag-class>com.wd.front.module.tag.JournalLinkListShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>ipRangeShowTag</name>
+		<tag-class>com.wd.front.module.tag.backend.IpRangeShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>org</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.wd.backend.model.Org</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>getProjectBasePath</name>
+		<tag-class>com.wd.front.module.tag.GetProjectBasePath</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>journalHomePageUrl</name>
+		<tag-class>com.wd.front.module.tag.JournalHomePageUrlTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+		<attribute>
+			<name>text</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>pushJournalUrl</name>
+		<tag-class>com.wd.front.module.tag.PushJournalUrlTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>disciplineSystem</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>com.wd.backend.model.DisciplineSystem</type>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>shouLuDbShow</name>
+		<tag-class>com.wd.front.module.tag.ShouLuDbShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>journaPicShow</name>
+		<tag-class>com.wd.front.module.tag.JournaPicShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>firstLetterNavication</name>
+		<tag-class>com.wd.front.module.tag.FirstLetterNavicationTag
+		</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>type</name>
+			<required>true</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>dbSubjectUrl</name>
+		<tag-class>com.wd.front.module.tag.DbSubjectUrlTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>db</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+
+		<attribute>
+			<name>detailYear</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Integer</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>dbSubjectListShow</name>
+		<tag-class>com.wd.front.module.tag.DbSubjectListShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>docList</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.List</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>homePageShow</name>
+		<tag-class>com.wd.front.module.tag.HomePageShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>text</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>overviewPageShow</name>
+		<tag-class>com.wd.front.module.tag.OverviewPageShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>text</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>authorPublisherShow</name>
+		<tag-class>com.wd.front.module.tag.AuthorPublisherShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>historyJsonShow</name>
+		<tag-class>com.wd.front.module.tag.HistoryJsonShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>abstractOnlinesJsonShow</name>
+		<tag-class>com.wd.front.module.tag.AbstractOnlinesJsonShowTag
+		</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+		<attribute>
+			<name>field</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>subjectJsonShow</name>
+		<tag-class>com.wd.front.module.tag.SubjectJsonShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>docDetailUrl</name>
+		<tag-class>com.wd.front.module.tag.DocDetailUrlShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+		<attribute>
+			<name>text</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+		<attribute>
+			<name>idField</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>shouLuFacetShow</name>
+		<tag-class>com.wd.front.module.tag.ShouLuFacetShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>facetMap</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>splitValueShow</name>
+		<tag-class>com.wd.front.module.tag.SplitValueShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+		<attribute>
+			<name>field</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+
+		<attribute>
+			<name>splitStr</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>detailShouluView</name>
+		<tag-class>com.wd.front.module.tag.ShouLuDetailShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+
+	<tag>
+		<name>simpleShouluView</name>
+		<tag-class>com.wd.front.module.tag.ShouLuSimpleShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>evalSimpleShowTag</name>
+		<tag-class>com.wd.front.module.tag.EvalSimpleShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+
+
+	<tag>
+		<name>evalDetailShowTag</name>
+		<tag-class>com.wd.front.module.tag.EvalDetailShowTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>doc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+
+	</tag>
+	
+	<tag>
+		<name>checkPurchased</name>
+		<tag-class>com.wd.front.module.tag.CheckPurchasedTag</tag-class>
+		<body-content>jsp</body-content>
+		<attribute>
+			<name>pid</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!--函数定义-->
+	<function>
+		<name>compareDate</name>
+		<function-class>com.wd.front.module.tag.Functions</function-class>
+		<function-signature>java.lang.Integer compareDate(java.util.Date)</function-signature>
+	</function>
+	
+	<function>
+		<name>findIpRanges</name>
+		<function-class>com.wd.front.module.tag.Functions</function-class>
+		<function-signature>java.lang.String findIpRanges(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	
+	<function>
+		<name>formatYear</name>
+		<function-class>com.wd.front.module.tag.Functions</function-class>
+		<function-signature>java.lang.String formatYear(java.lang.String)</function-signature>
+	</function>
+	
+	<function>
+		<name>getField</name>
+		<function-class>com.wd.front.module.tag.Functions</function-class>
+		<function-signature>java.lang.String getField(java.lang.String)</function-signature>
+	</function>
+	
+	<function>
+		<name>getValue</name>
+		<function-class>com.wd.front.module.tag.Functions</function-class>
+		<function-signature>java.lang.String getValue(java.lang.String)</function-signature>
+	</function>
+	
+	<function>
+		<name>encodeURI</name>
+		<function-class>com.wd.front.module.tag.Functions</function-class>
+		<function-signature>java.lang.String encodeURI(java.lang.String)</function-signature>
+	</function>
+	
+	<!-- 新标签 -->
+	<!-- 新闻Top列表 -->
+	<tag>
+		<name>news</name>
+		<tag-class>com.wd.front.module.ntag.NewsTag</tag-class>
+		<body-content>jsp</body-content>
+		<attribute>
+			<name>top</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+	</tag>
+	
+	<!-- 个人收藏Top列表 -->
+	<tag>
+		<name>favorite</name>
+		<tag-class>com.wd.front.module.ntag.FavoriteTag</tag-class>
+		<body-content>jsp</body-content>
+		<attribute>
+			<name>top</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+	</tag>
+	
+	<!-- 热门期刊Top列表 -->
+	<tag>
+		<name>hot</name>
+		<tag-class>com.wd.front.module.ntag.HotTag</tag-class>
+		<body-content>jsp</body-content>
+		<attribute>
+			<name>size</name>
+			<required>true</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		
+		<attribute>
+			<name>page</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<type>java.lang.Short</type>
+		</attribute>
+	</tag>
+	
+	<!-- 文献传递 -->
+	<tag>
+		<name>delivery</name>
+		
+		<tag-class>com.wd.front.module.ntag.DocDeliveryTag</tag-class>
+		<body-content>jsp</body-content>
+		<attribute>
+			<name>top</name>
+			<required>true</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>batchId</name>
+		<tag-class>com.wd.front.module.ntag.BatchIdTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	
+	<!-- 热搜词Top列表 -->
+	<tag>
+		<name>history</name>
+		<tag-class>com.wd.front.module.ntag.HistoryTag</tag-class>
+		<body-content>jsp</body-content>
+		
+		<attribute>
+			<name>systemId</name>
+			<required>true</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		
+		<attribute>
+			<name>size</name>
+			<required>true</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		
+		<attribute>
+			<name>mobile</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		
+	</tag>
+	
+	<tag>
+		<name>SchoolListShow</name>
+		<tag-class>com.wd.front.module.tag.SchoolShowTag</tag-class>
+		<body-content>empty</body-content>
+
+	</tag>
+
+</taglib>

@@ -1,0 +1,43 @@
+@media ( max-width : 1440px) {
+	.container {
+		width: 1024px;
+	}
+	.w-wrap,.navbar,.top-search-wrap {
+		width: 1000px;
+	}
+	.search-box {
+		width: 780px;
+	}
+	.search-box .qk-search {
+		transition: all 0.3s;
+	}
+	.i-wrap .menus-index {
+		width: 214px;
+	}
+	.i-wrap .i-content {
+		margin-left: 215px;
+	}
+	.adta-list .letter-list-fixed {
+		margin-left: -272px;
+	}
+	.user-man-main {
+		width: 720px;
+	}
+}
+
+@media ( max-height : 900px) {
+	.head {
+		height: 348px;
+	}
+	.sub-head {
+		height: 65px;
+	}
+	.index-logo {
+		margin-top: 44px;
+	}
+	.w-wrap {
+		margin-top: 30px;
+	}
+}
+
+/*# sourceMappingURL=screen.css.map */

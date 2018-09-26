@@ -1,0 +1,38 @@
+/*
+	站点管理首页css
+*/
+#site_list_container {
+	width: 300px;
+	height: 700px;
+	margin-right: 10px;
+	margin-left: 10px;
+	float: left;
+}
+
+#site_edit_container {
+	width: 1020px;
+	height: 700px;
+	float: left;
+}
+
+#file_editor {
+	position: relative;
+	top: 10px;
+	width: 1000px;
+	height: 550px;
+}
+
+#addSiteModal label span {
+	width: 70px;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+}
+
+#addSiteModal label input {
+	width: 300px;
+	height: 25px;
+	position: relative;
+	top: 2px;
+	position: relative;
+}

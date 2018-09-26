@@ -1,0 +1,461 @@
+@charset "UTF-8";
+/*-----------------------------*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td
+	{
+	margin: 0;
+	padding: 0;
+}
+
+fieldset,img {
+	border: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+address,caption,cite,code,dfn,em,th,var,optgroup {
+	font-weight: normal;
+	font-style: normal;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-size: 100%;
+	font-weight: normal;
+}
+
+abbr,acronym {
+	font-variant: normal;
+	border: none;
+}
+
+input,button,textarea,select,optgroup,option {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	font-style: inherit;
+}
+
+code,kbd,samp,tt {
+	font-size: 100%;
+}
+
+/*@purpose To enable resizing for IE */
+/*@branch For IE6-Win, IE7-Win */
+input,button,textarea,select {
+	outline: none;
+	*font-size: 100%;
+}
+
+body {
+	line-height: 1.5;
+}
+
+ol,ul {
+	list-style: none;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	table-layout: fixed;
+	border-spacing: 0;
+	border-collapse: collapse;
+	word-wrap: break-word;
+}
+
+caption,th {
+	text-align: center;
+}
+
+/*caption, th {text-align: left;}*/
+sub,sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+
+sup {
+	top: -.5em;
+}
+
+sub {
+	bottom: -.25em;
+}
+
+/* remember to highlight anchors and inserts somehow! */
+:link,:visited,ins {
+	text-decoration: none;
+}
+
+a:link {
+	color: #3c3c3c;
+}
+
+a:visited {
+	color: #3c3c3c;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:active {
+	color: #3c3c3c;
+}
+
+blockquote,q {
+	quotes: none;
+}
+
+blockquote:before,blockquote:after,q:before,q:after {
+	content: '';
+	content: none;
+}
+
+a {
+	transition: color .2s;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+/* ie下xmp为行内元素 转为block后 ie67会有margin值 */
+xmp {
+	display: block;
+	margin: 0;
+}
+
+table {
+	width: 100%;
+}
+
+tr {
+	height: 35px;
+}
+
+td,th {
+	height: 18px;
+	/*ie6 7 下和其他的默认高度不一样*/
+	padding: 8px 6px;
+}
+
+th {
+	color: #181818;
+	border: 1px solid #e2e2e2;
+	background: #eee;
+}
+
+td {
+	font-size: 12px;
+	border: 1px solid #e2e2e2;
+}
+
+table a {
+	color: #1a5fb6;
+}
+
+table a:hover {
+	text-decoration: underline;
+}
+
+table .tl {
+	text-align: left;
+}
+
+table .tr {
+	text-align: right;
+}
+
+table .tc {
+	text-align: center;
+}
+
+table .hide {
+	zoom: 1;
+	height: 0;
+	border: none;
+	*position: absolute;
+	*z-index: -22;
+}
+
+table .hide td,table .hide th {
+	height: 0;
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+table li {
+	line-height: 1.5;
+	padding: 3px 0;
+}
+
+.disabled {
+	pointer-events: none;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/*清除ie input输入框关闭 密码提示*/
+::-ms-clear,::-ms-reveal {
+	display: none;
+}
+
+::-webkit-input-placeholder {
+	/* WebKit browsers */
+	color: #999;
+}
+
+:-moz-placeholder {
+	/* Mozilla Firefox 4 to 18 */
+	color: #999;
+}
+
+::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: #999;
+}
+
+:-ms-input-placeholder,.register-form .login-input:-ms-input-placeholder
+	{
+	/* Internet Explorer 10+ */
+	color: #999;
+}
+
+/* float */
+.fr {
+	float: right;
+}
+
+.fl {
+	float: left;
+}
+
+.ovh {
+	overflow: hidden;
+}
+
+.clear {
+	clear: both;
+}
+
+.ova {
+	overflow: auto;
+}
+
+/* text-align */
+.tl {
+	text-align: left;
+}
+
+.tc {
+	text-align: center;
+}
+
+.tr {
+	text-align: right;
+}
+
+/* font-size */
+.f0 {
+	font-size: 0;
+}
+
+.f12 {
+	font-size: 12px;
+}
+
+.f13 {
+	font-size: 13px;
+}
+
+.f14 {
+	font-size: 14px;
+}
+
+.f16 {
+	font-size: 16px;
+}
+
+.f18 {
+	font-size: 18px;
+}
+
+.f20 {
+	font-size: 20px;
+}
+
+.f24 {
+	font-size: 24px;
+}
+
+.f28 {
+	font-size: 28px;
+}
+
+/* font-family */
+.fa {
+	font-family: Arial;
+}
+
+.ft {
+	font-family: Tahoma;
+}
+
+.fv {
+	font-family: Verdana;
+}
+
+.fs {
+	font-family: Simsun;
+}
+
+.fw {
+	font-family: 'Microsoft Yahei';
+}
+
+.fb {
+	font-weight: bold;
+}
+
+.textOver {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	word-wrap: normal;
+}
+
+.i {
+	background: url(../images/i.png) no-repeat;
+}
+
+.i-user {
+	background-position: -40px 0;
+}
+
+.i-user:hover {
+	background-position: -40px -33px;
+}
+
+.i-arraw {
+	background-position: -80px 0;
+}
+
+.i-arraw:hover {
+	background-position: -80px -20px;
+}
+
+.i-triangle {
+	background-position: -100px 0;
+}
+
+.i-doc {
+	background-position: 0px -70px;
+}
+
+.i-history {
+	background-position: -25px -70px;
+}
+
+.i-collect {
+	background-position: -50px -70px;
+}
+
+.i-senior {
+	background-position: -100px -80px;
+}
+
+.i-oafirst {
+	background-position: -100px -100px;
+}
+
+.i-oaicon {
+	background-position: -86px -100px;
+}
+
+.border {
+	border: 1px solid #f0efef;
+}
+
+/* 一屏内容 */
+body {
+	line-height: 1.42858;
+	font-size: 12px;
+	font-family: arial;
+}
+
+html,body,.index-wraper {
+	height: 100%;
+}
+
+.index-wraper {
+	height: auto;
+	min-height: 100%;
+	_height: 100%;
+	background: #fff;
+	color: #333;
+}
+
+.index-inwraper {
+	padding-bottom: 80px;
+	text-align: center;
+}
+
+.index-container {
+	background: #fff;
+}
+
+.index-footer {
+	height: 80px;
+	padding: 0;
+	margin-top: -80px;
+	background: #fff;
+	text-align: center;
+}
+
+.index-footer p {
+	height: 20px;
+	font-size: 12px;
+	color: #808080;
+	padding-top: 20px;
+}
+
+.footer {
+	text-align: center;
+	height: 80px;
+	*height: auto;
+	padding: 0;
+}
+
+.footer p {
+	height: 20px;
+	font-size: 12px;
+	color: #808080;
+	padding-top: 20px;
+}
+
+/* 常用 */
+.container {
+	width: 1190px;
+	margin: 0 auto;
+	padding-top: 20px;
+}
+
+.container:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/*# sourceMappingURL=common.css.map */

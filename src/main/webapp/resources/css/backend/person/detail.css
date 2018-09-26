@@ -1,0 +1,29 @@
+/*
+用户详细页css
+*/
+#person_detail_panel ul li {
+	width: 700px;
+}
+
+#person_detail_panel ul {
+	width: 400px;
+	margin: auto;
+}
+
+#person_detail_panel ul li span {
+	font-weight: bolder;
+	width: 80px;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+}
+
+#person_detail_panel ul li input {
+	width: 300px;
+	height: 25px;
+}
+
+#person_detail_panel ul li textarea {
+	width: 400px;
+	height: 100px;
+}
